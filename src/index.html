@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuro Sentry - AI-Powered Neurological Triage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="logo"> Neuro Sentry</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <button class="cta-button" onclick="location.href='./kiosk.html'">Launch Kiosk</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Real-Time Neurological Assessment, Powered by AI</h1>
+                <p class="subtitle">Neuro Sentry provides rapid, non-invasive triage for potential neurological distress using advanced facial analysis and vital sign monitoring.</p>
+                <button class="cta-button-large" onclick="location.href='./kiosk.html'">Begin Assessment</button>
+            </div>
+        </section>
+
+        <section id="features" class="features-section">
+            <h2>Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">👁️</div>
+                    <h3>Advanced Facial Analysis</h3>
+                    <p>Detects subtle facial asymmetries and micro-expressions associated with neurological events.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">❤️</div>
+                    <h3>Contactless Vital Signs</h3>
+                    <p>Measures heart rate and respiration through remote photoplethysmography (rPPG) via a standard camera.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🗣️</div>
+                    <h3>Speech Pattern Analysis</h3>
+                    <p>Analyzes vocal biomarkers like jitter and shimmer to identify signs of neurological impairment.</p>
+                </div>
+                 <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Instant Risk Stratification</h3>
+                    <p>Our fusion engine combines all data points to deliver an immediate, actionable triage level and risk score.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="how-it-works-section">
+            <h2>How It Works</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>1. Start Scan</h3>
+                        <p>The user initiates a scan from our web-based kiosk. A series of simple prompts begins.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2. Data Capture</h3>
+                        <p>A standard webcam records video, capturing facial geometry, skin perfusion for vitals, and audio for speech tasks.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>3. AI Analysis</h3>
+                        <p>Our backend engines process the video and audio streams in real-time, extracting key neurological indicators.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>4. Get Results</h3>
+                        <p>A comprehensive dashboard displays a risk score, triage level, and detailed rationale in seconds.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="about" class="about-section">
+            <h2>About Neuro Sentry</h2>
+            <p>Neuro Sentry is a proof-of-concept project designed for hackathon demonstration. It showcases a "live-only, no storage" architecture, meaning all data is processed in-memory for a single session without being saved. This ensures complete user privacy while demonstrating the power of real-time, AI-driven medical triage. The system is designed for rapid deployment in settings like emergency rooms, telehealth consultations, or remote clinics to assist healthcare professionals in making faster, more informed decisions.</p>
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 Neuro Sentry. For demonstration purposes only.</p>
+    </footer>
+</body>
+</html>
