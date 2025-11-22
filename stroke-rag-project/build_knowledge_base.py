@@ -1,0 +1,127 @@
+"""
+Build knowledge base for stroke triage RAG system.
+Run this file first to create knowledge_base.json
+"""
+
+import json
+
+def create_knowledge_base():
+    """
+    Create minimal knowledge base with clinical facts.
+    You can expand this later with more sources.
+    """
+    
+    knowledge_base = [
+        {
+            "text": "NIHSS facial palsy assessment: Ask patient to show teeth or smile. Score 0 = normal symmetry, 1 = minor paralysis with flattened nasolabial fold, 2 = partial paralysis affecting lower face, 3 = complete paralysis of one or both sides. Unilateral lower face weakness is a common sign of stroke.",
+            "metadata": {
+                "source": "NIHSS_Scale",
+                "category": "clinical_criteria",
+                "priority": "high"
+            }
+        },
+        {
+            "text": "Facial asymmetry measurement protocol: Measure vertical distance from mouth corner to reference horizontal line. A difference greater than 4mm between left and right sides indicates clinically significant asymmetry. Asymmetry scores above 0.35 on normalized scale warrant immediate neurological evaluation.",
+            "metadata": {
+                "source": "clinical_protocols",
+                "category": "measurement_guideline",
+                "priority": "high"
+            }
+        },
+        {
+            "text": "Bell's Palsy vs Stroke differentiation: Bell's Palsy affects both upper and lower face (patient cannot close eye or raise eyebrow on affected side). Stroke typically affects only lower face (patient can raise eyebrow and close eye normally). This is a critical distinction in facial weakness assessment.",
+            "metadata": {
+                "source": "differential_diagnosis",
+                "category": "clinical_criteria",
+                "priority": "high"
+            }
+        },
+        {
+            "text": "Dysarthria and facial palsy correlation: When dysarthria (speech clarity score below 0.6) occurs simultaneously with facial asymmetry, the likelihood of stroke increases significantly. This combination suggests cortical involvement affecting both motor speech centers and facial nerve pathways. Requires urgent evaluation.",
+            "metadata": {
+                "source": "neurology_textbook",
+                "category": "diagnostic_criteria",
+                "priority": "high"
+            }
+        },
+        {
+            "text": "Vital signs in acute stroke: Elevated heart rate (>100 bpm) and respiratory rate (>20 bpm) in presence of neurological symptoms may indicate sympathetic nervous system response to cerebral ischemia. While non-specific, these findings combined with other neurological signs increase stroke suspicion.",
+            "metadata": {
+                "source": "emergency_medicine",
+                "category": "vital_signs",
+                "priority": "medium"
+            }
+        },
+        {
+            "text": "Time-sensitive stroke triage: The 'golden hour' principle applies to stroke care. Patients showing facial asymmetry combined with speech difficulties should be flagged for immediate evaluation. Every 15-minute delay in treatment reduces favorable outcomes by 4%. Immediate triage is critical.",
+            "metadata": {
+                "source": "stroke_protocols",
+                "category": "triage_urgency",
+                "priority": "critical"
+            }
+        },
+        {
+            "text": "Dataset case study: 67-year-old male presented with acute left-sided facial weakness. Measurements showed left mouth corner droop of 5.8mm compared to 1.1mm on right side. Facial asymmetry score: 0.43. Patient diagnosed with ischemic stroke affecting right middle cerebral artery. NIHSS score: 6. Symptoms resolved with early intervention.",
+            "metadata": {
+                "source": "clinical_dataset",
+                "category": "case_study",
+                "case_id": "214",
+                "priority": "medium"
+            }
+        },
+        {
+            "text": "Dataset case study: 54-year-old female with sudden onset right facial droop (6.2mm right vs 0.8mm left) and slurred speech. Speech clarity proxy: 0.44. Facial asymmetry score: 0.46. CT confirmed ischemic stroke. Early thrombolytic therapy led to significant recovery.",
+            "metadata": {
+                "source": "clinical_dataset",
+                "category": "case_study",
+                "case_id": "089",
+                "priority": "medium"
+            }
+        }
+    ]
+    
+    return knowledge_base
+
+
+def save_knowledge_base(kb, filename='knowledge_base.json'):
+    """Save knowledge base to JSON file"""
+    with open(filename, 'w', encoding='utf-8') as f:
+        json.dump(kb, f, indent=2, ensure_ascii=False)
+    print(f"✓ Saved {len(kb)} documents to {filename}")
+
+
+def load_knowledge_base(filename='knowledge_base.json'):
+    """Load knowledge base from JSON file"""
+    try:
+        with open(filename, 'r', encoding='utf-8') as f:
+            kb = json.load(f)
+        print(f"✓ Loaded {len(kb)} documents from {filename}")
+        return kb
+    except FileNotFoundError:
+        print(f"✗ File {filename} not found. Run build first.")
+        return None
+
+
+if __name__ == "__main__":
+    print("Building knowledge base...")
+    
+    # Create knowledge base
+    kb = create_knowledge_base()
+    
+    # Save to file
+    save_knowledge_base(kb)
+    
+    print("\n" + "="*60)
+    print("Knowledge base created successfully!")
+    print("="*60)
+    print(f"\nTotal documents: {len(kb)}")
+    print("\nCategories:")
+    categories = {}
+    for doc in kb:
+        cat = doc['metadata']['category']
+        categories[cat] = categories.get(cat, 0) + 1
+    
+    for cat, count in categories.items():
+        print(f"  - {cat}: {count}")
+    
+    print("\nNext step: Create stroke_rag.py")
