@@ -1,0 +1,4 @@
+module HummingbirdJobs {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/HummingbirdJobs-Swift.h"
+    requires objc
+}

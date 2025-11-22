@@ -1,0 +1,65 @@
+{
+  "": {
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/master.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdJobs/AsyncAwaitSupport/AsyncJob.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/AsyncJob.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/AsyncJob.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/AsyncJob~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/AsyncJob.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdJobs/Exports.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/Exports.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/Exports.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/Exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/Exports.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdJobs/Job.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/Job.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/Job.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/Job~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/Job.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdJobs/JobContainer.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobContainer.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobContainer.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobContainer~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobContainer.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdJobs/JobQueue.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueue.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueue.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueue~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueue.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdJobs/JobQueueError.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueueError.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueueError.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueueError~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueueError.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdJobs/JobQueueHandler.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueueHandler.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueueHandler.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueueHandler~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueueHandler.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdJobs/JobQueueWorker.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueueWorker.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueueWorker.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueueWorker~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/JobQueueWorker.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdJobs/MemoryJobQueue.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/MemoryJobQueue.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/MemoryJobQueue.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/MemoryJobQueue~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/MemoryJobQueue.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdJobs/Request+Jobs.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/Request+Jobs.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/Request+Jobs.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/Request+Jobs~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdJobs.build/Request+Jobs.swiftdeps"
+  }
+}

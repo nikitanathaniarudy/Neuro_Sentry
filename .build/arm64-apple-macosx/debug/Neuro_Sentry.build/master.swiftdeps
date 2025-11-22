@@ -1,0 +1,5 @@
+version: "Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)"
+options: "f0087b11d5799ab5e0f1bd1f55166b95"
+build_time: [1763798739, 898747000]
+inputs:
+  "/Users/nikita/Neuro_Sentry/Sources/presage-bridge-macos/main.swift": !dirty [1763798258, 163148231]

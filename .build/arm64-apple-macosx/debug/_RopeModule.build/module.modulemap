@@ -1,0 +1,4 @@
+module _RopeModule {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/_RopeModule.build/_RopeModule-Swift.h"
+    requires objc
+}

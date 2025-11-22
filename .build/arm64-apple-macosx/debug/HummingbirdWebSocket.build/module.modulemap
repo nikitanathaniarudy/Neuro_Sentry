@@ -1,0 +1,4 @@
+module HummingbirdWebSocket {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdWebSocket.build/HummingbirdWebSocket-Swift.h"
+    requires objc
+}

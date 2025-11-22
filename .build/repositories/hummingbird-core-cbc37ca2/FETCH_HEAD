@@ -1,0 +1,107 @@
+ed3a621ecfa193173a3ac361eeedbfa6ee892e5d	not-for-merge	branch '2.x.x' of https://github.com/hummingbird-project/hummingbird-core
+dd8928102018d37ca4c5febb6d298617376cad5f	not-for-merge	branch 'feature/config-error-handling' of https://github.com/hummingbird-project/hummingbird-core
+48e6cef94f9c0af56ef357ce2f444582dece46f5	not-for-merge	branch 'fix/bytebuffer-streamer-queue' of https://github.com/hummingbird-project/hummingbird-core
+9506245e5201be33cec6b6e33e5d37e3e0ad6aa7	not-for-merge	branch 'gh-pages' of https://github.com/hummingbird-project/hummingbird-core
+c815f5d6391ade70947acfc63e82f4b5722f719d	not-for-merge	branch 'main' of https://github.com/hummingbird-project/hummingbird-core
+4839b57701d6db8571f2b608895d60c02ac1335c	not-for-merge	'refs/pull/10/head' of https://github.com/hummingbird-project/hummingbird-core
+94e6a6585f9531f598711a0e8fd518a394609b08	not-for-merge	'refs/pull/11/head' of https://github.com/hummingbird-project/hummingbird-core
+43df330fd62222b6e7ace33c7589e4e57dc68690	not-for-merge	'refs/pull/13/head' of https://github.com/hummingbird-project/hummingbird-core
+31a0f9f35ee8e2f241cdb0c82e8c7a7d334ff120	not-for-merge	'refs/pull/14/head' of https://github.com/hummingbird-project/hummingbird-core
+1e169ace3fbf5e1267c72afd7a8ecb04deac38d2	not-for-merge	'refs/pull/16/head' of https://github.com/hummingbird-project/hummingbird-core
+1aa97903644dd42355c1ede9bc65404b8c688505	not-for-merge	'refs/pull/17/head' of https://github.com/hummingbird-project/hummingbird-core
+fcfe2fc6434a0f3f1629b3e7ed8b26b83b2b4278	not-for-merge	'refs/pull/19/head' of https://github.com/hummingbird-project/hummingbird-core
+1f12c45f7f1831aeeafbe3d31c42a261d4eab5a7	not-for-merge	'refs/pull/20/head' of https://github.com/hummingbird-project/hummingbird-core
+fe00af4e3c24fee8076d8a0a6be9434f894698da	not-for-merge	'refs/pull/21/head' of https://github.com/hummingbird-project/hummingbird-core
+bb7a6c3eb3852bde9288a81327937c589b11eaef	not-for-merge	'refs/pull/22/head' of https://github.com/hummingbird-project/hummingbird-core
+88c06458f5ada72e5821f197783d9bf73d38446f	not-for-merge	'refs/pull/23/head' of https://github.com/hummingbird-project/hummingbird-core
+b879b135d6c534944a79c0794d109c349d932552	not-for-merge	'refs/pull/24/head' of https://github.com/hummingbird-project/hummingbird-core
+74a01aaea8ee215679b9a27baa3a1e91c40148d5	not-for-merge	'refs/pull/25/head' of https://github.com/hummingbird-project/hummingbird-core
+2d7c8c92eccb415ebceb85c374aaa016630fc022	not-for-merge	'refs/pull/26/head' of https://github.com/hummingbird-project/hummingbird-core
+8f78bdb57351fa487e28255398564bd19ae0e550	not-for-merge	'refs/pull/27/head' of https://github.com/hummingbird-project/hummingbird-core
+c051cda9b4df46221e2bd7cdf18e4baed453e422	not-for-merge	'refs/pull/28/head' of https://github.com/hummingbird-project/hummingbird-core
+ea84be48bd47404efe891f5f755edd91994fbf35	not-for-merge	'refs/pull/29/head' of https://github.com/hummingbird-project/hummingbird-core
+ab12c6465c2cd6e4b64b6ca6d5051ed6bb1150ee	not-for-merge	'refs/pull/30/head' of https://github.com/hummingbird-project/hummingbird-core
+1743071357b51b066b7dcaa6c73fa3447e28f7ea	not-for-merge	'refs/pull/31/head' of https://github.com/hummingbird-project/hummingbird-core
+517f921fbfb45b89fd5d6a71567aa86de357a3c4	not-for-merge	'refs/pull/33/head' of https://github.com/hummingbird-project/hummingbird-core
+6f27463dd87556b6111fc156c48f6ed74995c500	not-for-merge	'refs/pull/34/head' of https://github.com/hummingbird-project/hummingbird-core
+8a2530ad78d1c012445bdfab7b0cf93e54493fca	not-for-merge	'refs/pull/36/head' of https://github.com/hummingbird-project/hummingbird-core
+1b519ccc0a4e5dfc9ca5dbb9e5a37b67e6abaae7	not-for-merge	'refs/pull/37/head' of https://github.com/hummingbird-project/hummingbird-core
+5825bdf57ccff09bc44a063653b86b272cd50751	not-for-merge	'refs/pull/38/head' of https://github.com/hummingbird-project/hummingbird-core
+0595e9b2c41b0c627377ca3c8ad5c6210aa226eb	not-for-merge	'refs/pull/39/head' of https://github.com/hummingbird-project/hummingbird-core
+d0f2361a752966cbc34f4767b083b60f82c779c9	not-for-merge	'refs/pull/4/head' of https://github.com/hummingbird-project/hummingbird-core
+9d947a5a09f1891568136c22b063510be06dc4c4	not-for-merge	'refs/pull/42/head' of https://github.com/hummingbird-project/hummingbird-core
+e16830394e70c84c4d9e465e2b13f7c49c553fea	not-for-merge	'refs/pull/43/head' of https://github.com/hummingbird-project/hummingbird-core
+451281f48fbc00c02dd8adef0a63d22f1c8c0be3	not-for-merge	'refs/pull/44/head' of https://github.com/hummingbird-project/hummingbird-core
+3e0c7d95223ed6b1ba3f5ccd41e915ef331e16de	not-for-merge	'refs/pull/45/head' of https://github.com/hummingbird-project/hummingbird-core
+d52989aa93c993fb605abfb000f553ed89b7321a	not-for-merge	'refs/pull/47/head' of https://github.com/hummingbird-project/hummingbird-core
+e24085efed7e92fcc6044e37df76c004a1774915	not-for-merge	'refs/pull/48/head' of https://github.com/hummingbird-project/hummingbird-core
+5c41024b761b82a58eaffd63466d2e040c6211ff	not-for-merge	'refs/pull/49/head' of https://github.com/hummingbird-project/hummingbird-core
+8e9f116e3b48d5ff0473271f0b2a114e933ac489	not-for-merge	'refs/pull/50/head' of https://github.com/hummingbird-project/hummingbird-core
+48e6cef94f9c0af56ef357ce2f444582dece46f5	not-for-merge	'refs/pull/51/head' of https://github.com/hummingbird-project/hummingbird-core
+0ca4f6bf2a1e347dfb00f5ff1749bdc95ceb60ee	not-for-merge	'refs/pull/52/head' of https://github.com/hummingbird-project/hummingbird-core
+1ed64c153b577d53c1cfb4fd7fa09e632178df3c	not-for-merge	'refs/pull/53/head' of https://github.com/hummingbird-project/hummingbird-core
+32a7596aae3b36640120011bf59644c43ca6e2ac	not-for-merge	'refs/pull/54/head' of https://github.com/hummingbird-project/hummingbird-core
+f561d1148540f25084392c91cd46c86165c007f1	not-for-merge	'refs/pull/55/head' of https://github.com/hummingbird-project/hummingbird-core
+7e007f0262e70a44f0017f31a0bc9930cc5c1f3a	not-for-merge	'refs/pull/59/head' of https://github.com/hummingbird-project/hummingbird-core
+54fec5b17f8337c92ccc041d304b96619f1fef4b	not-for-merge	'refs/pull/6/head' of https://github.com/hummingbird-project/hummingbird-core
+1f6ada7bbb88330ad09e9b4c2afcf657875d8005	not-for-merge	'refs/pull/60/head' of https://github.com/hummingbird-project/hummingbird-core
+8af06bbe0eaad6a6b54b9932d878292cb463301a	not-for-merge	'refs/pull/61/head' of https://github.com/hummingbird-project/hummingbird-core
+538122744786ebf28ed641a2874572b3cf0f3d15	not-for-merge	'refs/pull/63/head' of https://github.com/hummingbird-project/hummingbird-core
+998fe5ca89d288459e69430a3953bd02e0db8bf6	not-for-merge	'refs/pull/64/head' of https://github.com/hummingbird-project/hummingbird-core
+b2c6004393153318e83ac4eeac78314194f5994a	not-for-merge	'refs/pull/65/head' of https://github.com/hummingbird-project/hummingbird-core
+b7ea51eaba4adfd819ade7b200dd71c67347d204	not-for-merge	'refs/pull/67/head' of https://github.com/hummingbird-project/hummingbird-core
+5b24114603cbf7157fe18eecb2da6f5dd0a042b8	not-for-merge	'refs/pull/68/head' of https://github.com/hummingbird-project/hummingbird-core
+843974926fdaddb7b28f1ae0362bf011f6f352fd	not-for-merge	'refs/pull/7/head' of https://github.com/hummingbird-project/hummingbird-core
+fd474b1ed851fd0b06b96b88762f5059f76d2bd2	not-for-merge	'refs/pull/8/head' of https://github.com/hummingbird-project/hummingbird-core
+c4583e807929b9a5dea1ec57e59e45e393667ee8	not-for-merge	'refs/pull/9/head' of https://github.com/hummingbird-project/hummingbird-core
+1317589bd4eb266ed5939c7c7855be52a2e904cc	not-for-merge	tag '0.1.0' of https://github.com/hummingbird-project/hummingbird-core
+6d425a189908141971ce3dde88987fb76063001f	not-for-merge	tag '0.1.1' of https://github.com/hummingbird-project/hummingbird-core
+951fc2fd24602264099a3d003504bedb42b55b00	not-for-merge	tag '0.10.0' of https://github.com/hummingbird-project/hummingbird-core
+b18eed6077b8a4e4460086aa138c0576610840a0	not-for-merge	tag '0.10.1' of https://github.com/hummingbird-project/hummingbird-core
+50fb2830297a3c149773fb2e48cfb9d917f6b712	not-for-merge	tag '0.10.2' of https://github.com/hummingbird-project/hummingbird-core
+652285cef72a9f7c2e80794389869212cd05b64d	not-for-merge	tag '0.11.0' of https://github.com/hummingbird-project/hummingbird-core
+d7145aa7be8f001d6da2d5592043f2859edaaf33	not-for-merge	tag '0.11.1' of https://github.com/hummingbird-project/hummingbird-core
+c54767b93605bcebf194002116cfc6038fcd6f32	not-for-merge	tag '0.12.0' of https://github.com/hummingbird-project/hummingbird-core
+262298e8dc65d0ad067e82f313d72eeabfec76c1	not-for-merge	tag '0.12.1' of https://github.com/hummingbird-project/hummingbird-core
+4692edfedd6b0ef7017f4dfbd433280d60e813c3	not-for-merge	tag '0.12.2' of https://github.com/hummingbird-project/hummingbird-core
+2e9a9de68aae98e8f1960803d2d02b2a700b40ee	not-for-merge	tag '0.12.3' of https://github.com/hummingbird-project/hummingbird-core
+ec85fe3b396c967bfbf69e1eb96b3ab5896b9fd0	not-for-merge	tag '0.12.4' of https://github.com/hummingbird-project/hummingbird-core
+1b3f345b03e7dc7362765ace9daff3929eb1dfa8	not-for-merge	tag '0.13.0' of https://github.com/hummingbird-project/hummingbird-core
+a3f48ed49c1eb17c4350f66c122cbebe4c3214fd	not-for-merge	tag '0.13.1' of https://github.com/hummingbird-project/hummingbird-core
+c0ad49eec86ff55d8c1e8b7cf4d7eabf53900a25	not-for-merge	tag '0.13.2' of https://github.com/hummingbird-project/hummingbird-core
+8719550a30afbecb1f9b0322c4d40a2314b2e153	not-for-merge	tag '0.13.3' of https://github.com/hummingbird-project/hummingbird-core
+eca35f36ef467ebbd5a89eec0bbd84d5374a3155	not-for-merge	tag '0.13.4' of https://github.com/hummingbird-project/hummingbird-core
+9616361c11bd42fca3dc06ac60bed6ad106c46c3	not-for-merge	tag '0.13.5' of https://github.com/hummingbird-project/hummingbird-core
+393859303185bbfe21b3b042248495df169a94bb	not-for-merge	tag '0.14.0' of https://github.com/hummingbird-project/hummingbird-core
+a3b5a489782fa34874d515826748e7247a1c27f6	not-for-merge	tag '0.2.0' of https://github.com/hummingbird-project/hummingbird-core
+6539b319bfd6c854f4df1e499f962db63d13ce95	not-for-merge	tag '0.3.0' of https://github.com/hummingbird-project/hummingbird-core
+9d04591d91d2dff9162555368577b54996e79aff	not-for-merge	tag '0.4.0' of https://github.com/hummingbird-project/hummingbird-core
+ed0bb1853e7064d520a8ac564dcc6559a4c97124	not-for-merge	tag '0.4.1' of https://github.com/hummingbird-project/hummingbird-core
+41b5c4f85fcbd4b5349ac25118e107b4d3941e9c	not-for-merge	tag '0.4.2' of https://github.com/hummingbird-project/hummingbird-core
+607cce8d2aca1b3bb04afa1973d82aead86dd7b5	not-for-merge	tag '0.4.3' of https://github.com/hummingbird-project/hummingbird-core
+d91c37d4ebe446e1067ef2af8348f09424024824	not-for-merge	tag '0.4.4' of https://github.com/hummingbird-project/hummingbird-core
+43a62b02b3c3fb534e400140c8ccc6d293b07533	not-for-merge	tag '0.5.0' of https://github.com/hummingbird-project/hummingbird-core
+7099566a31e12f566c6104f63f48ac25f6b5317e	not-for-merge	tag '0.6.0' of https://github.com/hummingbird-project/hummingbird-core
+a0672c5165476342107d85195d6dc2808fc64157	not-for-merge	tag '0.6.1' of https://github.com/hummingbird-project/hummingbird-core
+350a6dca29299a64a876863c24cf0da1fda4bdeb	not-for-merge	tag '0.6.2' of https://github.com/hummingbird-project/hummingbird-core
+069fb2319a6504b7f6a24487c5c638a342fef601	not-for-merge	tag '0.7.0' of https://github.com/hummingbird-project/hummingbird-core
+ee695f800dadf7b6de91b5812a5572d1859500ca	not-for-merge	tag '0.8.0' of https://github.com/hummingbird-project/hummingbird-core
+8408783d4fc32900af6e3b3383b640fedbefc34a	not-for-merge	tag '0.8.1' of https://github.com/hummingbird-project/hummingbird-core
+a188178747744b47ce115b60b7545a1c29222fa1	not-for-merge	tag '0.9.0' of https://github.com/hummingbird-project/hummingbird-core
+c3889e36c6d829f6e0d8adc8c4bb812e607d5eb9	not-for-merge	tag '0.9.1' of https://github.com/hummingbird-project/hummingbird-core
+1bc717612d2b2b9d4c86d08cb97bda67120a0f41	not-for-merge	tag '0.9.2' of https://github.com/hummingbird-project/hummingbird-core
+0fd029c177eb95f9865e779add9438e0a6a16fee	not-for-merge	tag '1.0.0' of https://github.com/hummingbird-project/hummingbird-core
+d38a3e71b6ee0edebfe2f43203df673e586908c3	not-for-merge	tag '1.0.0-alpha.1' of https://github.com/hummingbird-project/hummingbird-core
+fc187b5aeb587de147ba2ae5a2c8a131433dda23	not-for-merge	tag '1.0.0-rc.1' of https://github.com/hummingbird-project/hummingbird-core
+0fd029c177eb95f9865e779add9438e0a6a16fee	not-for-merge	tag '1.0.0-rc.2' of https://github.com/hummingbird-project/hummingbird-core
+55945761ecb45f07e2a6a97d5e2d339e69689369	not-for-merge	tag '1.1.0' of https://github.com/hummingbird-project/hummingbird-core
+c62bc2a257bed524990c3caf6c87c3e0e286e79b	not-for-merge	tag '1.1.1' of https://github.com/hummingbird-project/hummingbird-core
+af974e5ba636f0c59880404739779c5004ed250e	not-for-merge	tag '1.2.0' of https://github.com/hummingbird-project/hummingbird-core
+b1f07ff02ea17ca4d6e23c233149fafb77bb8bd2	not-for-merge	tag '1.2.1' of https://github.com/hummingbird-project/hummingbird-core
+6bea362d3db571c9c5ad3b36e12e23bc78a12f65	not-for-merge	tag '1.3.0' of https://github.com/hummingbird-project/hummingbird-core
+4458f691653db58ac55a1aa8ef978709cd7e0749	not-for-merge	tag '1.3.1' of https://github.com/hummingbird-project/hummingbird-core
+5fd8895666e6507ecafe9539020dd3882fb8625f	not-for-merge	tag '1.3.2' of https://github.com/hummingbird-project/hummingbird-core
+ca84a9bae1bbbf1015c9ec69f4fb46324f2b19a1	not-for-merge	tag '1.4.0' of https://github.com/hummingbird-project/hummingbird-core
+1cf74c13b7059dcd834ed1a8b84bae556b25395d	not-for-merge	tag '1.5.0' of https://github.com/hummingbird-project/hummingbird-core
+502abf07438b0d254ca8a28a50aab2ac5bca4599	not-for-merge	tag '1.6.0' of https://github.com/hummingbird-project/hummingbird-core
+2a16f079f78b2a746ad57b3931c366cd14961927	not-for-merge	tag '1.6.1' of https://github.com/hummingbird-project/hummingbird-core

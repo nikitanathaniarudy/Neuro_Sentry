@@ -1,0 +1,4 @@
+module LifecycleNIOCompat {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/LifecycleNIOCompat.build/LifecycleNIOCompat-Swift.h"
+    requires objc
+}

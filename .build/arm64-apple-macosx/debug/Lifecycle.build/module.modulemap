@@ -1,0 +1,4 @@
+module Lifecycle {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Lifecycle.build/Lifecycle-Swift.h"
+    requires objc
+}

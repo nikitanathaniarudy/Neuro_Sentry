@@ -1,0 +1,29 @@
+{
+  "": {
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/master.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird-core/Sources/HummingbirdHTTP2/ChannelInitializer.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/ChannelInitializer.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/ChannelInitializer.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/ChannelInitializer~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/ChannelInitializer.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird-core/Sources/HummingbirdHTTP2/Exports.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/Exports.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/Exports.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/Exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/Exports.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird-core/Sources/HummingbirdHTTP2/HTTP2UserEventHandler.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/HTTP2UserEventHandler.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/HTTP2UserEventHandler.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/HTTP2UserEventHandler~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/HTTP2UserEventHandler.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird-core/Sources/HummingbirdHTTP2/HTTPServer+HTTP2.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/HTTPServer+HTTP2.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/HTTPServer+HTTP2.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/HTTPServer+HTTP2~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/HTTPServer+HTTP2.swiftdeps"
+  }
+}

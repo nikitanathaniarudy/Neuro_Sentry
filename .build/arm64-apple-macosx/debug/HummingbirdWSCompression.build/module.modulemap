@@ -1,0 +1,4 @@
+module HummingbirdWSCompression {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdWSCompression.build/HummingbirdWSCompression-Swift.h"
+    requires objc
+}

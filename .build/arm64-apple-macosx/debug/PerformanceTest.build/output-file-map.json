@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/PerformanceTest.build/master.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/PerformanceTest/main.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/PerformanceTest.build/main.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/PerformanceTest.build/main.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/PerformanceTest.build/main~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/PerformanceTest.build/main.swiftdeps"
+  }
+}

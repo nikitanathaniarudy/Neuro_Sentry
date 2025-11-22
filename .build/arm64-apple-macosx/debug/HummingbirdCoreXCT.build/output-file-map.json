@@ -1,0 +1,23 @@
+{
+  "": {
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdCoreXCT.build/master.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird-core/Sources/HummingbirdCoreXCT/TimeoutPromise.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdCoreXCT.build/TimeoutPromise.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdCoreXCT.build/TimeoutPromise.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdCoreXCT.build/TimeoutPromise~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdCoreXCT.build/TimeoutPromise.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird-core/Sources/HummingbirdCoreXCT/XCTClient+types.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdCoreXCT.build/XCTClient+types.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdCoreXCT.build/XCTClient+types.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdCoreXCT.build/XCTClient+types~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdCoreXCT.build/XCTClient+types.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird-core/Sources/HummingbirdCoreXCT/XCTClient.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdCoreXCT.build/XCTClient.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdCoreXCT.build/XCTClient.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdCoreXCT.build/XCTClient~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdCoreXCT.build/XCTClient.swiftdeps"
+  }
+}

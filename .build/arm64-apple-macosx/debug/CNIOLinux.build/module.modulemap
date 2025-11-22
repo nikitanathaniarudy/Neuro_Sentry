@@ -1,0 +1,4 @@
+module CNIOLinux {
+    umbrella header "/Users/nikita/Neuro_Sentry/.build/checkouts/swift-nio/Sources/CNIOLinux/include/CNIOLinux.h"
+    export *
+}

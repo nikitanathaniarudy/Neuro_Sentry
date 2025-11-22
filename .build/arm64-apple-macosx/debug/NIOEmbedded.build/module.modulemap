@@ -1,0 +1,4 @@
+module NIOEmbedded {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOEmbedded.build/NIOEmbedded-Swift.h"
+    requires objc
+}

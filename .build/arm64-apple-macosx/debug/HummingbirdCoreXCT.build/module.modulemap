@@ -1,0 +1,4 @@
+module HummingbirdCoreXCT {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdCoreXCT.build/HummingbirdCoreXCT-Swift.h"
+    requires objc
+}

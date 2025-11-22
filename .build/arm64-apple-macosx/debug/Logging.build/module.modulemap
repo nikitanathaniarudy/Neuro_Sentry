@@ -1,0 +1,4 @@
+module Logging {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Logging.build/Logging-Swift.h"
+    requires objc
+}

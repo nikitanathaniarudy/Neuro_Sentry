@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Numerics.build/master.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/swift-numerics/Sources/Numerics/Numerics.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Numerics.build/Numerics.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Numerics.build/Numerics.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Numerics.build/Numerics~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Numerics.build/Numerics.swiftdeps"
+  }
+}

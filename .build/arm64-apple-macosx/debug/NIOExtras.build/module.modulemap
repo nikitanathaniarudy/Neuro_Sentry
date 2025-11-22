@@ -1,0 +1,4 @@
+module NIOExtras {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOExtras.build/NIOExtras-Swift.h"
+    requires objc
+}

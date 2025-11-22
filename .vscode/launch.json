@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:Neuro_Sentry}",
+      "name": "Debug Neuro_Sentry",
+      "target": "Neuro_Sentry",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug Neuro_Sentry"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:Neuro_Sentry}",
+      "name": "Release Neuro_Sentry",
+      "target": "Neuro_Sentry",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release Neuro_Sentry"
+    }
+  ]
+}

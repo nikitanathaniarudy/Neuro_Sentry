@@ -1,0 +1,101 @@
+{
+  "": {
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/master.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/AsyncAwaitSupport/FileIO+async.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/FileIO+async.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/FileIO+async.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/FileIO+async~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/FileIO+async.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Codable/JSON/JSONCoding.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/JSONCoding.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/JSONCoding.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/JSONCoding~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/JSONCoding.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Codable/URLEncodedForm/URLEncodedForm+Request.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedForm+Request.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedForm+Request.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedForm+Request~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedForm+Request.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Codable/URLEncodedForm/URLEncodedForm.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedForm.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedForm.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedForm~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedForm.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Codable/URLEncodedForm/URLEncodedFormDecoder.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedFormDecoder.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedFormDecoder.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedFormDecoder~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedFormDecoder.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Codable/URLEncodedForm/URLEncodedFormEncoder.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedFormEncoder.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedFormEncoder.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedFormEncoder~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedFormEncoder.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Codable/URLEncodedForm/URLEncodedFormNode.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedFormNode.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedFormNode.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedFormNode~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/URLEncodedFormNode.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Cookies/Cookie.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Cookie.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Cookie.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Cookie~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Cookie.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Cookies/Cookies.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Cookies.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Cookies.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Cookies~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Cookies.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Cookies/Request+Cookies.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Request+Cookies.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Request+Cookies.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Request+Cookies~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Request+Cookies.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Cookies/Response+Cookies.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Response+Cookies.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Response+Cookies.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Response+Cookies~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Response+Cookies.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Exports.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Exports.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Exports.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Exports~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/Exports.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Files/CacheControl.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/CacheControl.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/CacheControl.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/CacheControl~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/CacheControl.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Files/FileIO.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/FileIO.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/FileIO.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/FileIO~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/FileIO.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Files/FileMiddleware.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/FileMiddleware.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/FileMiddleware.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/FileMiddleware~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/FileMiddleware.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/hummingbird/Sources/HummingbirdFoundation/Utils/DateCache+Date.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/DateCache+Date.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/DateCache+Date.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/DateCache+Date~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/DateCache+Date.swiftdeps"
+  }
+}

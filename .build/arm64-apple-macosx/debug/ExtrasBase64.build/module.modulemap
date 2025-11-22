@@ -1,0 +1,4 @@
+module ExtrasBase64 {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/ExtrasBase64.build/ExtrasBase64-Swift.h"
+    requires objc
+}

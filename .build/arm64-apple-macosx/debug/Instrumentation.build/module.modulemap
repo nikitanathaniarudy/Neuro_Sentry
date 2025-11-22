@@ -1,0 +1,4 @@
+module Instrumentation {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Instrumentation.build/Instrumentation-Swift.h"
+    requires objc
+}

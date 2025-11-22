@@ -1,0 +1,4 @@
+module NIOTestUtils {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOTestUtils.build/NIOTestUtils-Swift.h"
+    requires objc
+}

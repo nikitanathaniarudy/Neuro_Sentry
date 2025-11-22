@@ -1,0 +1,29 @@
+{
+  "": {
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/master.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/swift-nio/Sources/NIOFoundationCompat/ByteBuffer-foundation.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/ByteBuffer-foundation.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/ByteBuffer-foundation.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/ByteBuffer-foundation~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/ByteBuffer-foundation.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/swift-nio/Sources/NIOFoundationCompat/Codable+ByteBuffer.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/Codable+ByteBuffer.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/Codable+ByteBuffer.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/Codable+ByteBuffer~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/Codable+ByteBuffer.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/swift-nio/Sources/NIOFoundationCompat/JSONSerialization+ByteBuffer.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/JSONSerialization+ByteBuffer.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/JSONSerialization+ByteBuffer.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/JSONSerialization+ByteBuffer~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/JSONSerialization+ByteBuffer.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/swift-nio/Sources/NIOFoundationCompat/WaitSpinningRunLoop.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/WaitSpinningRunLoop.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/WaitSpinningRunLoop.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/WaitSpinningRunLoop~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOFoundationCompat.build/WaitSpinningRunLoop.swiftdeps"
+  }
+}

@@ -1,0 +1,4 @@
+module CCompressZlib {
+    umbrella header "/Users/nikita/Neuro_Sentry/.build/checkouts/compress-nio/Sources/CCompressZlib/include/CCompressZlib.h"
+    export *
+}

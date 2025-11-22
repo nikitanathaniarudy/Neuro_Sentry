@@ -1,0 +1,4 @@
+module HummingbirdFoundation {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdFoundation.build/HummingbirdFoundation-Swift.h"
+    requires objc
+}

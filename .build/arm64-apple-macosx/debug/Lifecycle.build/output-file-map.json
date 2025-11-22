@@ -1,0 +1,23 @@
+{
+  "": {
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Lifecycle.build/master.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/swift-service-lifecycle/Sources/Lifecycle/Atomics.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Lifecycle.build/Atomics.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Lifecycle.build/Atomics.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Lifecycle.build/Atomics~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Lifecycle.build/Atomics.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/swift-service-lifecycle/Sources/Lifecycle/Lifecycle.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Lifecycle.build/Lifecycle.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Lifecycle.build/Lifecycle.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Lifecycle.build/Lifecycle~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Lifecycle.build/Lifecycle.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/swift-service-lifecycle/Sources/Lifecycle/Locks.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Lifecycle.build/Locks.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Lifecycle.build/Locks.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Lifecycle.build/Locks~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Lifecycle.build/Locks.swiftdeps"
+  }
+}

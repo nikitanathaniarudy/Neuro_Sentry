@@ -1,0 +1,4 @@
+module NIOHTTPResponsiveness {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOHTTPResponsiveness.build/NIOHTTPResponsiveness-Swift.h"
+    requires objc
+}

@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Neuro_Sentry.build/master.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/Sources/presage-bridge-macos/main.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Neuro_Sentry.build/main.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Neuro_Sentry.build/main.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Neuro_Sentry.build/main~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Neuro_Sentry.build/main.swiftdeps"
+  }
+}

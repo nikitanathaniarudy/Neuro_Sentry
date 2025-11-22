@@ -1,0 +1,4 @@
+module NIOTLS {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/NIOTLS.build/NIOTLS-Swift.h"
+    requires objc
+}

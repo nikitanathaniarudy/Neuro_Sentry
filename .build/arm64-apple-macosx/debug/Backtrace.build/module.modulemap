@@ -1,0 +1,4 @@
+module Backtrace {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/Backtrace.build/Backtrace-Swift.h"
+    requires objc
+}

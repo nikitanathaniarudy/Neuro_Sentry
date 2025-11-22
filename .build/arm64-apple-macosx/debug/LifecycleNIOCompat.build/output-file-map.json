@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/LifecycleNIOCompat.build/master.swiftdeps"
+  },
+  "/Users/nikita/Neuro_Sentry/.build/checkouts/swift-service-lifecycle/Sources/LifecycleNIOCompat/Bridge.swift": {
+    "dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/LifecycleNIOCompat.build/Bridge.d",
+    "object": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/LifecycleNIOCompat.build/Bridge.swift.o",
+    "swiftmodule": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/LifecycleNIOCompat.build/Bridge~partial.swiftmodule",
+    "swift-dependencies": "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/LifecycleNIOCompat.build/Bridge.swiftdeps"
+  }
+}

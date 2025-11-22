@@ -1,0 +1,4 @@
+module HummingbirdHTTP2 {
+    header "/Users/nikita/Neuro_Sentry/.build/arm64-apple-macosx/debug/HummingbirdHTTP2.build/HummingbirdHTTP2-Swift.h"
+    requires objc
+}

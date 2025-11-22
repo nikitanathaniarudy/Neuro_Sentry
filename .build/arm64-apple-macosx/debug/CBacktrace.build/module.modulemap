@@ -1,0 +1,4 @@
+module CBacktrace {
+    umbrella "/Users/nikita/Neuro_Sentry/.build/checkouts/swift-backtrace/Sources/CBacktrace/include"
+    export *
+}
