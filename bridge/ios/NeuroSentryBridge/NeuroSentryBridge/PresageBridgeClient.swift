@@ -3,8 +3,8 @@ import Combine
 import SmartSpectraSwiftSDK
 import AVFoundation
 
-// Paste your ngrok WSS URL here (e.g., wss://<subdomain>.ngrok-free.dev/presage_stream)
-let backendWSS = "wss://YOUR_NGROK_SUBDOMAIN.ngrok-free.dev/presage_stream"
+// Paste your Mac LAN IP here (e.g., ws://192.168.1.23:8000/presage_stream)
+private let BACKEND_WS = "ws://172.20.10.2:8000/presage_stream"
 
 struct PresagePacket: Codable {
     let type: String
@@ -21,57 +21,71 @@ final class PresageBridgeClient: ObservableObject {
     private let vitals = SmartSpectraVitalsProcessor.shared
     private var cancellables: Set<AnyCancellable> = []
     private var webSocket: URLSessionWebSocketTask?
-    private let backendURL: URL
-    private var hasSentStart = false
+    @Published var isRunning = false
 
     init(apiKey: String) {
-        self.backendURL = URL(string: backendWSS) ?? URL(string: "wss://example.ngrok-free.dev/presage_stream")!
         sdk.setApiKey(apiKey)
         sdk.setSmartSpectraMode(.continuous)
+        // Force the front camera as per instructions
+        sdk.setCameraPosition(.front)
     }
 
     func startVitals() {
-        vitals.startProcessing()
-        vitals.startRecording()
-        observeMetrics()
+        guard !isRunning else {
+            print("[PresageBridge] startVitals called but already running.")
+            return
+        }
+        print("[PresageBridge] Starting vitals...")
+        isRunning = true
         connectWebSocket()
+        // Delay processing to allow websocket to connect and graph to initialize
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.vitals.startProcessing()
+            self.vitals.startRecording()
+            self.observeMetrics()
+            self.sendControl(type: "session_start")
+            print("[PresageBridge] Vitals processing and recording started.")
+        }
     }
 
     func stopVitals() {
-        sendControl(type: "session_end")
+        guard isRunning else {
+            print("[PresageBridge] stopVitals called but not running.")
+            return
+        }
+        print("[PresageBridge] Stopping vitals...")
+        isRunning = false
         vitals.stopProcessing()
         vitals.stopRecording()
+        sendControl(type: "session_end")
         cancellables.removeAll()
         webSocket?.cancel(with: .goingAway, reason: "stop".data(using: .utf8))
-        hasSentStart = false
+        webSocket = nil
+        print("[PresageBridge] Vitals stopped.")
     }
 
     private func connectWebSocket() {
         webSocket?.cancel()
-        webSocket = URLSession(configuration: .default).webSocketTask(with: backendURL)
+        guard let url = URL(string: BACKEND_WS) else {
+            print("[PresageBridge] BACKEND_WS invalid. Set your Mac LAN IP.")
+            return
+        }
+        webSocket = URLSession(configuration: .default).webSocketTask(with: url)
         webSocket?.resume()
         listen()
-        print("[PresageBridge] ws connected -> \(backendURL)")
-        sendControl(type: "session_start")
-        hasSentStart = true
+        print("[PresageBridge] ws connected -> \(url)")
     }
 
     private func listen() {
         webSocket?.receive { [weak self] result in
             switch result {
             case .failure(let error):
-                print("[PresageBridge] ws error: \(error)"); self?.retryOnce()
-            case .success:
+                print("[PresageBridge] ws error: \(error)")
+                // Handle reconnect or other errors
+            case .success(let message):
+                print("[PresageBridge] ws received: \(message)")
                 self?.listen()
             }
-        }
-    }
-
-    private func retryOnce() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            guard let self else { return }
-            print("[PresageBridge] retrying websocket connect once...")
-            self.connectWebSocket()
         }
     }
 
@@ -79,25 +93,12 @@ final class PresageBridgeClient: ObservableObject {
         sdk.$metricsBuffer
             .compactMap { $0 }
             .sink { [weak self] metrics in
-                self?.sendPacket(metrics: metrics)
+                self?.handleMetrics(metrics: metrics)
             }
             .store(in: &cancellables)
     }
 
-    private func sendControl(type: String) {
-        let payload: [String: Any] = [
-            "type": type,
-            "timestamp": ISO8601DateFormatter().string(from: Date())
-        ]
-        guard let data = try? JSONSerialization.data(withJSONObject: payload, options: []),
-              let json = String(data: data, encoding: .utf8) else { return }
-
-        webSocket?.send(.string(json)) { error in
-            if let error = error { print("[PresageBridge] control send error: \(error)") }
-        }
-    }
-
-    private func sendPacket(metrics: Presage_Physiology_MetricsBuffer) {
+    private func handleMetrics(metrics: Presage_Physiology_MetricsBuffer) {
         let hr = metrics.pulse.rate.last?.value
         let br = metrics.breathing.rate.last?.value
         let quality = metrics.pulse.rate.last?.confidence
@@ -108,7 +109,7 @@ final class PresageBridgeClient: ObservableObject {
 
         var points: [[Double]] = []
         if let lastLandmarks = sdk.edgeMetrics?.face.landmarks.last?.value {
-            points = lastLandmarks.map { [Double($0.x) / 1280.0, Double($0.y) / 1280.0] }
+            points = lastLandmarks.map { [Double($0.x), Double($0.y)] }
         }
 
         let packet = PresagePacket(
@@ -120,16 +121,29 @@ final class PresageBridgeClient: ObservableObject {
             regions: regions,
             face_points: points
         )
-
-        guard let data = try? JSONEncoder().encode(packet), let json = String(data: data, encoding: .utf8) else {
-            print("[PresageBridge] encode failed")
+        sendPacket(packet)
+    }
+    
+    private func sendPacket(_ packet: PresagePacket) {
+        guard let ws = webSocket else { return }
+        guard let data = try? JSONEncoder().encode(packet),
+              let json = String(data: data, encoding: .utf8) else {
+            print("[PresageBridge] Packet encode failed")
             return
         }
+        ws.send(.string(json)) { error in
+            if let error = error { print("[PresageBridge] Packet send error: \(error)") }
+        }
+    }
 
-        webSocket?.send(.string(json)) { [weak self] error in
-            if let error = error {
-                print("[PresageBridge] send error: \(error)"); self?.retryOnce()
-            }
+    private func sendControl(type: String) {
+        guard let ws = webSocket else { return }
+        let payload: [String: Any] = ["type": type, "timestamp": ISO8601DateFormatter().string(from: Date())]
+        guard let data = try? JSONSerialization.data(withJSONObject: payload, options: []),
+              let json = String(data: data, encoding: .utf8) else { return }
+        ws.send(.string(json)) { error in
+            if let error = error { print("[PresageBridge] control send error: \(error)") }
         }
     }
 }
+

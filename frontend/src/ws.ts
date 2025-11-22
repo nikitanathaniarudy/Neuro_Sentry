@@ -7,17 +7,10 @@ export type TriageOutput = {
 };
 
 export type LiveStateMessage = {
-  type: "live" | "final";
-  presage_summary?: Record<string, unknown>;
-  audio_summary?: Record<string, unknown>;
-  triage_output?: TriageOutput;
+  type: "live" | "raw_dump" | "final";
+  data?: Record<string, any>;
+  packets?: Record<string, unknown>[];
   gemini_report?: Record<string, unknown>;
-  debug?: {
-    packet_age_ms?: number | null;
-    using_simulated_presage?: boolean;
-    last_audio_age_ms?: number | null;
-    session_active?: boolean;
-  };
 };
 
 type Handlers = {
@@ -31,7 +24,8 @@ export function connectLiveState({ onMessage, onStatusChange }: Handlers) {
 
   const connect = () => {
     onStatusChange?.("connecting");
-    socket = new WebSocket("ws://localhost:8000/live_state");
+    const url = "ws://localhost:8000/live_state";
+    socket = new WebSocket(url);
 
     socket.onopen = () => {
       onStatusChange?.("open");

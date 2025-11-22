@@ -3,8 +3,14 @@ import SmartSpectraSwiftSDK
 
 struct ContentView: View {
     // Paste your Presage API key here for the demo
-    private let apiKey: String = "YOUR_PRESAGE_API_KEY"
-    @StateObject private var bridge = PresageBridgeClient(apiKey: "YOUR_PRESAGE_API_KEY")
+    private let apiKey: String = "Fl5OoJHmDO5pfK89lw7UT5wWP414U8HB4ZvzoFNF"
+
+    @StateObject private var bridge: PresageBridgeClient
+
+    init() {
+        let key = apiKey
+        _bridge = StateObject(wrappedValue: PresageBridgeClient(apiKey: key))
+    }
 
     var body: some View {
         SmartSpectraView()
