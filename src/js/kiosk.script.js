@@ -49,11 +49,11 @@ function log(message, type = 'info') {
 // --- WebSocket Connection ---
 function connectWebSocket() {
     log("🔗 Connecting to data stream...");
-    ws = new WebSocket("ws://localhost:8000/ws/data");
+    ws = new WebSocket("ws://localhost:8081");
 
     ws.onopen = () => {
         log("✅ Data stream connected.", 'success');
-        startPromptFlow();
+        // The prompt flow can start now, or wait for user action
     };
 
     ws.onmessage = (event) => {
@@ -66,11 +66,11 @@ function connectWebSocket() {
     };
 
     ws.onclose = () => {
-        log("🔌 Data stream closed.", 'error');
+        log("🔌 Data stream closed. Is the Swift bridge running?", 'error');
     };
 
     ws.onerror = (error) => {
-        log("❌ WebSocket error. Is the backend server running?", 'error');
+        log("❌ WebSocket error. Is the Swift bridge running?", 'error');
         console.error("WebSocket Error:", error);
     };
 }
@@ -150,7 +150,30 @@ function drawFaceMesh(mesh, asymmetry) {
 
 // --- Audio Recording ---
 function startAudioRecording() {
-    // (Existing audio recording logic remains the same)
+    console.log("🎤 Recording started"); 
+    log("🎤 Recording started", 'success');
+
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+
+            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks);
+                log("Audio recorded.", 'success');
+
+                // Move to next step
+                currentStep++;
+                runNextPrompt();
+            };
+
+            mediaRecorder.start();
+
+            // Auto-stop after 5 seconds
+            setTimeout(() => mediaRecorder.stop(), 5000);
+        })
+        .catch(err => log(`Audio recording failed: ${err}`, 'error'));
 }
 
 // --- Main Prompt Flow ---
@@ -198,6 +221,26 @@ function runNextPrompt() {
             runNextPrompt();
         }, step.duration);
     }
+}
+
+function displayFinalResult() {
+    // Show final risk panel
+    riskPanel.style.display = 'block';
+
+    // Final risk score (last updated in updateRiskScore)
+    const finalScore = riskScoreDisplay.textContent;
+
+    // Determine triage level
+    let triage = 'Low';
+    if (parseInt(finalScore) >= 70) triage = 'High';
+    else if (parseInt(finalScore) >= 40) triage = 'Moderate';
+
+    triageLevelDisplay.textContent = triage;
+
+    // Optional: rationale box explanation
+    rationaleBox.textContent = `Final neurological assessment completed. Risk score of ${finalScore} indicates a ${triage} triage level.`;
+
+    log("✅ Final result displayed on UI.", 'success');
 }
 
 // --- Initializer ---
