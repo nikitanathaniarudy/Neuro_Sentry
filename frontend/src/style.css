@@ -1,0 +1,123 @@
+:root {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  line-height: 1.5;
+  color: #e6f2ff;
+  background: radial-gradient(circle at 20% 20%, #1d2b64, #09121f 60%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 16px;
+  padding: 20px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.alert-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  opacity: 0.0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.alert-overlay.active {
+  opacity: 0.35;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.01);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 12px;
+  letter-spacing: 0.4px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.mesh-canvas {
+  width: 100%;
+  height: 320px;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.08), transparent 60%),
+    linear-gradient(135deg, rgba(13, 71, 161, 0.35), rgba(7, 17, 34, 0.8));
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.mesh-point {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #6dd3ff;
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(109, 211, 255, 0.7);
+}
+
+.prompt-step {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+button.primary {
+  background: linear-gradient(135deg, #4fc3f7, #1e88e5);
+  border: none;
+  color: #04101d;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button.ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #e6f2ff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
