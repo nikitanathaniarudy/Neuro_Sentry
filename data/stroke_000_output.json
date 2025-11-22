@@ -1,0 +1,12 @@
+{
+  "branch_scores": {
+    "temporal": 0.2810419958923554,
+    "zygomatic": 0.39733078644537095,
+    "buccal": 0.6361327134017245,
+    "mandibular": 0.2116050305897133
+  },
+  "asymmetry_global": 0.6619288857646408,
+  "triage_prob": 0.2747156083508852,
+  "triage_prob_ml": 0.18732643127441406,
+  "recommendation": "Monitor - Low Risk"
+}
