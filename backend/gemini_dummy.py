@@ -148,3 +148,74 @@ async def call_gemini_dummy(
         return _normalize_output(result)
     except Exception:
         return _fallback_triage(presage_summary, audio_summary)
+
+
+async def call_gemini_report(
+    presage_summary: Dict[str, object], audio_summary: Dict[str, object]
+) -> Dict[str, object]:
+    """Final session report. Uses Gemini if available, otherwise deterministic."""
+
+    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    # Reuse heuristics for fallback
+    base_triage = _fallback_triage(presage_summary, audio_summary)
+    fallback_report = {
+        "risk_level": "HIGH" if base_triage["triage_level"] >= 4 else "MED" if base_triage["triage_level"] == 3 else "LOW",
+        "summary": "Heuristic summary based on session vitals.",
+        "recommendation": "Follow up if symptoms persist; ensure calm breathing and hydration.",
+        "confidence": float(base_triage.get("confidence", 0.6)),
+        "presage_snapshot": presage_summary,
+    }
+    if not api_key or not genai or not genai_types:
+        return fallback_report
+
+    client = genai.Client(api_key=api_key)
+
+    def _invoke() -> Dict[str, object]:
+        prompt = [
+            {
+                "role": "user",
+                "parts": [
+                    "You are the triage brain for Neuro-Sentry. Return JSON with keys risk_level (LOW/MED/HIGH), summary, recommendation, confidence (0-1)."
+                ],
+            },
+            {"role": "user", "parts": [f"Session presage summary: {json.dumps(presage_summary, ensure_ascii=True)}"]},
+            {"role": "user", "parts": [f"Audio summary: {json.dumps(audio_summary, ensure_ascii=True)}"]},
+        ]
+        response = client.models.generate_content(
+            model="gemini-1.5-flash",
+            contents=prompt,
+            config=genai_types.GenerateContentConfig(
+                response_mime_type="application/json",
+                response_schema=genai_types.Schema.from_dict(
+                    {
+                        "type": "object",
+                        "properties": {
+                            "risk_level": {"type": "string"},
+                            "summary": {"type": "string"},
+                            "recommendation": {"type": "string"},
+                            "confidence": {"type": "number"},
+                        },
+                        "required": ["risk_level", "summary", "recommendation", "confidence"],
+                    }
+                ),
+            ),
+        )
+        if hasattr(response, "text") and response.text:
+            try:
+                return json.loads(response.text)
+            except Exception:
+                return fallback_report
+        return fallback_report
+
+    try:
+        result = await asyncio.to_thread(_invoke)
+        merged = fallback_report.copy()
+        merged.update(result or {})
+        merged.setdefault("risk_level", fallback_report["risk_level"])
+        merged.setdefault("recommendation", fallback_report["recommendation"])
+        merged.setdefault("summary", fallback_report["summary"])
+        merged.setdefault("confidence", fallback_report["confidence"])
+        merged["presage_snapshot"] = presage_summary
+        return merged
+    except Exception:
+        return fallback_report

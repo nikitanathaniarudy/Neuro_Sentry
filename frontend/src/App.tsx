@@ -5,6 +5,7 @@ import AudioRecorder from "./components/AudioRecorder";
 import { LiveStateMessage, connectLiveState } from "./ws";
 
 const defaultState: LiveStateMessage = {
+  type: "live",
   presage_summary: {},
   audio_summary: {},
   triage_output: {
@@ -14,7 +15,7 @@ const defaultState: LiveStateMessage = {
     rationale_short: "Waiting for signals...",
     ui_directives: { alert_color: "#43a047", highlight_regions: [] },
   },
-  is_simulated: false, // Added default for new field
+  debug: { packet_age_ms: null as any, using_simulated_presage: false, last_audio_age_ms: null as any },
 };
 
 const App: React.FC = () => {
@@ -22,10 +23,24 @@ const App: React.FC = () => {
   const [connectionStatus, setConnectionStatus] = useState<"connecting" | "open" | "closed">("connecting");
   const [recordToken, setRecordToken] = useState(0);
   const [recordLabel, setRecordLabel] = useState("phrase");
+  const [finalReport, setFinalReport] = useState<Record<string, unknown> | null>(null);
 
   useEffect(() => {
     const disconnect = connectLiveState({
-      onMessage: (payload) => setLiveState(payload),
+      onMessage: (payload) => {
+        if (payload.type === "final") {
+          setFinalReport(payload.gemini_report || {});
+        } else {
+          setLiveState({
+            ...payload,
+            presage_summary: payload.presage_summary || {},
+            audio_summary: payload.audio_summary || {},
+            triage_output:
+              payload.triage_output ||
+              defaultState.triage_output,
+          });
+        }
+      },
       onStatusChange: (status) => setConnectionStatus(status),
     });
     return disconnect;
@@ -43,7 +58,8 @@ const App: React.FC = () => {
         audioSummary={liveState.audio_summary}
         triageOutput={liveState.triage_output}
         connectionStatus={connectionStatus}
-        isSimulated={liveState.is_simulated} // Pass the is_simulated prop
+        debug={liveState.debug}
+        finalReport={finalReport}
       />
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <PromptPanel onPhraseStart={handlePhraseStart} />

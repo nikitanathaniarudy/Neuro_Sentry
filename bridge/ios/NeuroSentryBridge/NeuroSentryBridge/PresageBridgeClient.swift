@@ -1,9 +1,14 @@
 import Foundation
 import Combine
 import SmartSpectraSwiftSDK
+import AVFoundation
+
+// Paste your ngrok WSS URL here (e.g., wss://<subdomain>.ngrok-free.dev/presage_stream)
+let backendWSS = "wss://YOUR_NGROK_SUBDOMAIN.ngrok-free.dev/presage_stream"
 
 struct PresagePacket: Codable {
-    let timestamp: Int64
+    let type: String
+    let timestamp: String
     let heart_rate: Double?
     let breathing_rate: Double?
     let quality: Double?
@@ -17,9 +22,10 @@ final class PresageBridgeClient: ObservableObject {
     private var cancellables: Set<AnyCancellable> = []
     private var webSocket: URLSessionWebSocketTask?
     private let backendURL: URL
+    private var hasSentStart = false
 
-    init(backendHost: String, apiKey: String) {
-        self.backendURL = URL(string: backendHost) ?? URL(string: "ws://localhost:8000/presage_stream")!
+    init(apiKey: String) {
+        self.backendURL = URL(string: backendWSS) ?? URL(string: "wss://example.ngrok-free.dev/presage_stream")!
         sdk.setApiKey(apiKey)
         sdk.setSmartSpectraMode(.continuous)
     }
@@ -32,10 +38,12 @@ final class PresageBridgeClient: ObservableObject {
     }
 
     func stopVitals() {
+        sendControl(type: "session_end")
         vitals.stopProcessing()
         vitals.stopRecording()
-        webSocket?.cancel(with: .goingAway, reason: "app_background".data(using: .utf8))
         cancellables.removeAll()
+        webSocket?.cancel(with: .goingAway, reason: "stop".data(using: .utf8))
+        hasSentStart = false
     }
 
     private func connectWebSocket() {
@@ -44,21 +52,27 @@ final class PresageBridgeClient: ObservableObject {
         webSocket?.resume()
         listen()
         print("[PresageBridge] ws connected -> \(backendURL)")
+        sendControl(type: "session_start")
+        hasSentStart = true
     }
 
     private func listen() {
         webSocket?.receive { [weak self] result in
             switch result {
             case .failure(let error):
-                print("[PresageBridge] ws error: \(error)"); self?.retry()
+                print("[PresageBridge] ws error: \(error)"); self?.retryOnce()
             case .success:
                 self?.listen()
             }
         }
     }
 
-    private func retry() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in self?.connectWebSocket() }
+    private func retryOnce() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            guard let self else { return }
+            print("[PresageBridge] retrying websocket connect once...")
+            self.connectWebSocket()
+        }
     }
 
     private func observeMetrics() {
@@ -68,6 +82,19 @@ final class PresageBridgeClient: ObservableObject {
                 self?.sendPacket(metrics: metrics)
             }
             .store(in: &cancellables)
+    }
+
+    private func sendControl(type: String) {
+        let payload: [String: Any] = [
+            "type": type,
+            "timestamp": ISO8601DateFormatter().string(from: Date())
+        ]
+        guard let data = try? JSONSerialization.data(withJSONObject: payload, options: []),
+              let json = String(data: data, encoding: .utf8) else { return }
+
+        webSocket?.send(.string(json)) { error in
+            if let error = error { print("[PresageBridge] control send error: \(error)") }
+        }
     }
 
     private func sendPacket(metrics: Presage_Physiology_MetricsBuffer) {
@@ -85,7 +112,8 @@ final class PresageBridgeClient: ObservableObject {
         }
 
         let packet = PresagePacket(
-            timestamp: Int64(Date().timeIntervalSince1970 * 1000),
+            type: "vitals",
+            timestamp: ISO8601DateFormatter().string(from: Date()),
             heart_rate: hr.map(Double.init),
             breathing_rate: br.map(Double.init),
             quality: quality.map(Double.init),
@@ -100,7 +128,7 @@ final class PresageBridgeClient: ObservableObject {
 
         webSocket?.send(.string(json)) { [weak self] error in
             if let error = error {
-                print("[PresageBridge] send error: \(error)"); self?.retry()
+                print("[PresageBridge] send error: \(error)"); self?.retryOnce()
             }
         }
     }

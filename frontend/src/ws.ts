@@ -7,10 +7,17 @@ export type TriageOutput = {
 };
 
 export type LiveStateMessage = {
-  presage_summary: Record<string, unknown>;
-  audio_summary: Record<string, unknown>;
-  triage_output: TriageOutput;
-  is_simulated: boolean; // Added field
+  type: "live" | "final";
+  presage_summary?: Record<string, unknown>;
+  audio_summary?: Record<string, unknown>;
+  triage_output?: TriageOutput;
+  gemini_report?: Record<string, unknown>;
+  debug?: {
+    packet_age_ms?: number | null;
+    using_simulated_presage?: boolean;
+    last_audio_age_ms?: number | null;
+    session_active?: boolean;
+  };
 };
 
 type Handlers = {

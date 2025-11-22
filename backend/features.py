@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from collections import deque
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from typing import Deque, Dict, Iterable, List, Tuple
 
@@ -48,8 +48,8 @@ def summarize_presage_window(
             "breathing_rate": 0.0,
             "quality": 0.0,
             "top_regions": [],
-            "point_count": 0,
-        }
+        "point_count": 0,
+    }
 
     heart_rates = [p.heart_rate for p in packets if p.heart_rate is not None]
     breaths = [p.breathing_rate for p in packets if p.breathing_rate is not None]
@@ -73,6 +73,23 @@ def summarize_presage_window(
         "point_count": len(latest_points),
         "face_points": latest_points,
         "last_timestamp": packets[-1].timestamp.isoformat(),
+    }
+
+
+def build_simulated_presage(now: datetime | None = None) -> Dict[str, object]:
+    """Return a stable simulated presage summary when no live packets arrive."""
+
+    now = now or datetime.now(timezone.utc)
+    return {
+        "window_seconds": WINDOW_SECONDS,
+        "count": 1,
+        "heart_rate": 72.0,
+        "breathing_rate": 14.0,
+        "quality": 0.5,
+        "top_regions": [],
+        "point_count": 0,
+        "face_points": [],
+        "last_timestamp": now.isoformat(),
     }
 
 

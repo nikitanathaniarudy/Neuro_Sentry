@@ -1,8 +1,7 @@
 """Pydantic schemas for Presage packets, audio summaries, and triage output."""
 
+from datetime import datetime, timezone
 from typing import Annotated, Dict, List, Optional
-from datetime import datetime
-
 
 from pydantic import BaseModel, Field, confloat, conint
 
@@ -23,13 +22,13 @@ class PresagePacket(BaseModel):
     regions: Dict[str, float] = Field(
         default_factory=dict, description="Region activation/confidence scores"
     )
-    is_simulated: bool = False # New field to indicate if this packet is from a simulator
+    is_simulated: bool = False
 
 
 class AudioPacket(BaseModel):
     """Lightweight summary of an audio clip."""
 
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     label: str = "phrase"
     duration: float
     sample_rate: int

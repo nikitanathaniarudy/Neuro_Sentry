@@ -1,6 +1,5 @@
 import React from "react";
 import MeshView from "./MeshView";
-import CameraFeed from "./CameraFeed"; // Import CameraFeed
 import { TriageOutput } from "../ws";
 
 type DashboardProps = {
@@ -8,7 +7,8 @@ type DashboardProps = {
   audioSummary: Record<string, any>;
   triageOutput?: TriageOutput;
   connectionStatus: "connecting" | "open" | "closed";
-  isSimulated: boolean; // New prop
+  debug?: { packet_age_ms?: number; using_simulated_presage?: boolean; last_audio_age_ms?: number; session_active?: boolean };
+  finalReport?: Record<string, unknown> | null;
 };
 
 const formatNumber = (v: any, digits = 1) =>
@@ -25,32 +25,35 @@ export const Dashboard: React.FC<DashboardProps> = ({
   audioSummary,
   triageOutput,
   connectionStatus,
-  isSimulated, // Destructure new prop
+  debug,
+  finalReport,
 }) => {
   const alertActive = (triageOutput?.triage_level || 1) >= 4;
   const highlight = triageOutput?.ui_directives?.highlight_regions || [];
+  const packetAge = debug?.packet_age_ms ?? null;
+  const audioAge = debug?.last_audio_age_ms ?? null;
+  const simulated = debug?.using_simulated_presage ?? false;
 
   return (
     <div className="card" style={{ position: "relative" }}>
       <div className={`alert-overlay ${alertActive ? "active" : ""}`} style={{ background: triageOutput?.ui_directives?.alert_color || "#43a047" }} />
       <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
         <h2 style={{ margin: 0 }}>Neuro-Sentry Dashboard</h2>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}> {/* Added a div for flexible spacing */}
-          {isSimulated && (
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {simulated && (
             <span className="status-chip" style={{ backgroundColor: "#ffc107", color: "#333" }}>
-              SIMULATED
+              SIMULATED VITALS
             </span>
           )}
           <span className="status-chip" style={{ color: statusColor(connectionStatus) }}>
             <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: statusColor(connectionStatus) }} />
-            {connectionStatus}
+            {connectionStatus === "open" ? "LIVE" : "DISCONNECTED"}
           </span>
         </div>
       </div>
 
       <div className="row" style={{ marginTop: 12 }}>
-        <div style={{ flex: 2, minWidth: 320, position: "relative" }}> {/* Added position: "relative" */}
-          <CameraFeed /> {/* Added CameraFeed component */}
+        <div style={{ flex: 2, minWidth: 320, position: "relative" }}>
           <MeshView
             points={(presageSummary?.face_points as number[][]) || []}
             highlightRegions={highlight as string[]}
@@ -65,6 +68,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <div style={{ marginTop: 8, fontSize: 12, opacity: 0.8 }}>
             Window: {presageSummary?.window_seconds ?? 0}s | Samples: {presageSummary?.count ?? 0}
           </div>
+          <div style={{ marginTop: 6, fontSize: 12, opacity: 0.8 }}>
+            Last presage age: {packetAge !== null ? `${packetAge} ms` : "–"}
+          </div>
         </div>
       </div>
 
@@ -75,6 +81,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <div>Jitter: {formatNumber(audioSummary?.jitter, 4)}</div>
           <div>Shimmer: {formatNumber(audioSummary?.shimmer, 4)}</div>
           <div>Duration: {formatNumber(audioSummary?.duration, 2)}s</div>
+          <div style={{ marginTop: 6, fontSize: 12, opacity: 0.8 }}>
+            Last audio age: {audioAge !== null ? `${audioAge} ms` : "–"}
+          </div>
         </div>
 
         <div className="card" style={{ flex: 1 }}>
@@ -87,6 +96,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
         </div>
       </div>
+
+      {finalReport && (
+        <div className="card" style={{ marginTop: 14, border: "1px solid #4fc3f7" }}>
+          <h3 style={{ marginTop: 0 }}>Final Analysis</h3>
+          <div>Risk level: {(finalReport["risk_level"] as string) || "—"}</div>
+          <div>Confidence: {formatNumber(finalReport["confidence"], 3)}</div>
+          <div style={{ marginTop: 6 }}>{(finalReport["summary"] as string) || "No summary"}</div>
+          <div style={{ marginTop: 6, fontSize: 13, opacity: 0.9 }}>
+            {(finalReport["recommendation"] as string) || "No recommendation"}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
