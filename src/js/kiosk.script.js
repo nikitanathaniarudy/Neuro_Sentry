@@ -15,7 +15,7 @@ const rationaleBox = document.getElementById('rationale-box');
 const riskPanel = document.getElementById('risk-panel');
 const video = document.getElementById('webcam-feed');
 const canvas = document.getElementById('face-overlay');
-const ctx = canvas.getContext('2d');
+const jsonOutput = document.getElementById('json-output');
 
 // --- Global State ---
 let ws = null;
@@ -91,6 +91,9 @@ function handleLivePresageData(data) {
     
     // Update face overlay
     drawFaceMesh(data.mesh, asymmetry);
+
+    // Update JSON Output
+    jsonOutput.textContent = JSON.stringify(data, null, 2);
 
     // TODO: Send to a more advanced fusion engine
     updateRiskScore(data, asymmetry);

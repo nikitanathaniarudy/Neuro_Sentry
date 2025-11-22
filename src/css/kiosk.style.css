@@ -223,3 +223,31 @@ button:active {
         align-items: center;
     }
 }
+.json-output-container {
+    margin-top: 2rem;
+    background-color: var(--primary-dark);
+    padding: 1.5rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.json-output-container strong {
+    font-size: 1.2rem;
+    color: var(--accent-blue);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+#json-output {
+    background-color: #000;
+    color: #00ff00; /* Green text for a classic terminal look */
+    padding: 1rem;
+    border-radius: 5px;
+    font-family: 'SF Mono', 'Menlo', 'monospace';
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
