@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+websockets
+pydantic
+numpy
+scipy
+librosa
+python-dotenv
+google-genai
