@@ -1,0 +1,225 @@
+/* Basic Reset and Layout */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f1c2b 0%, #1a2b3c 100%);
+    color: #e0e0e0;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+#app {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: rgba(26, 41, 58, 0.95);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Helper Class */
+.hidden {
+    display: none !important;
+}
+
+/* Header & Buttons */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #2e3b4e;
+    padding-bottom: 15px;
+}
+
+h1 { 
+    color: #87ceeb;
+    margin: 0;
+    font-size: 2.2em;
+}
+
+h2 {
+    color: #a8d8ea;
+    border-bottom: 1px solid #3a4a5c;
+    padding-bottom: 10px;
+}
+
+button {
+    padding: 12px 25px;
+    background: linear-gradient(145deg, #f73859, #d12e4c);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(247, 56, 89, 0.3);
+}
+
+button:hover { 
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(247, 56, 89, 0.4);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* Scan View Layout */
+#scan-view {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+}
+
+#camera-feed-container {
+    position: relative;
+    width: 60%; 
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+}
+
+#webcam-feed, #face-overlay {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+#face-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+#instruction-panel {
+    flex: 1;
+    padding: 25px;
+    background: linear-gradient(145deg, #2e3b4e, #384759);
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+#current-prompt {
+    font-size: 1.3em;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border-left: 4px solid #87ceeb;
+}
+
+/* Dashboard & Risk Panel */
+#dashboard {
+    padding: 25px;
+    border: 2px solid #5a7791;
+    border-radius: 12px;
+    background: rgba(42, 58, 75, 0.8);
+}
+
+#vitals-display {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 25px;
+    justify-content: center;
+}
+
+.vital-item {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 15px 25px;
+    border-radius: 10px;
+    text-align: center;
+    min-width: 180px;
+}
+
+.vital-label {
+    display: block;
+    font-size: 0.9em;
+    color: #a8d8ea;
+    margin-bottom: 5px;
+}
+
+#hr-value, #rr-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #ffc107;
+}
+
+#risk-panel {
+    margin-top: 20px;
+    padding: 25px;
+    background: linear-gradient(145deg, #384759, #2e3b4e);
+    border-radius: 12px;
+    text-align: center;
+}
+
+#risk-score {
+    font-size: 3em;
+    font-weight: bold;
+    color: #ffc107;
+    text-shadow: 0 2px 10px rgba(255, 193, 7, 0.3);
+}
+
+#triage-level {
+    font-size: 1.4em;
+    margin: 15px 0;
+    font-weight: bold;
+}
+
+.rationale-container {
+    margin-top: 20px;
+    text-align: left;
+}
+
+#rationale-box {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #87ceeb;
+    margin: 10px 0;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+/* ALERT Animation (for high risk) */
+.alert-high {
+    animation: pulse 1.5s infinite alternate;
+    background: linear-gradient(145deg, #f73859, #aa1e35) !important;
+}
+
+@keyframes pulse {
+    from { 
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(247, 56, 89, 0.4);
+    }
+    to { 
+        transform: scale(1.02);
+        box-shadow: 0 0 30px rgba(247, 56, 89, 0.7);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #scan-view {
+        flex-direction: column;
+    }
+    
+    #camera-feed-container {
+        width: 100%;
+    }
+    
+    #vitals-display {
+        flex-direction: column;
+        align-items: center;
+    }
+}

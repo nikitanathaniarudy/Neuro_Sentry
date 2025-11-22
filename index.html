@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuro-Sentry Kiosk</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>🧠 Neuro-Sentry Triage Protocol</h1>
+        </header>
+
+        <main>
+            <section id="scan-view">
+                <div id="camera-feed-container">
+                    <video id="webcam-feed" autoplay playsinline muted></video>
+                    <canvas id="face-overlay"></canvas>
+                </div>
+                
+                <div id="instruction-panel">
+                    <p id="current-prompt">Click <strong>Start Scan</strong> to begin neurological assessment.</p>
+                    <button id="start-scan-btn">START SCAN</button>
+                    <button id="record-audio-btn" style="display:none;">🎤 RECORD AUDIO</button>
+                </div>
+            </section>
+
+            <section id="dashboard" class="hidden">
+                <h2>Stroke Risk Assessment Results</h2>
+                
+                <div id="vitals-display">
+                    <div class="vital-item">
+                        <span class="vital-label">Heart Rate:</span>
+                        <span id="hr-value">--</span> bpm
+                    </div>
+                    <div class="vital-item">
+                        <span class="vital-label">Respiration Rate:</span>
+                        <span id="rr-value">--</span> breaths/min
+                    </div>
+                </div>
+
+                <div id="risk-panel">
+                    <h3>Stroke Risk Probability: <span id="risk-score">--</span>%</h3>
+                    <p id="triage-level">Triage Level: Awaiting Analysis...</p>
+                    <div class="rationale-container">
+                        <strong>Clinical Rationale:</strong>
+                        <blockquote id="rationale-box">Analysis in progress...</blockquote>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
