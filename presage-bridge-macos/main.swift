@@ -1,5 +1,6 @@
 import Hummingbird
 import HummingbirdWebSocket
+import Foundation
 
 // --- 1. Data Structures ---
 struct PresagePacket: Codable {
@@ -27,10 +28,9 @@ func generateMockPresageData() -> PresagePacket {
                 z: Double.random(in: -0.05...0.05))
     }
     
-    // Simulate asymmetry calculation
     let leftCheilion = mesh[61]
     let rightCheilion = mesh[291]
-    let asymmetry = abs(leftCheilion.y - rightCheilion.y) * 10 // Magnify for effect
+    let asymmetry = abs(leftCheilion.y - rightCheilion.y) * 10
 
     return PresagePacket(
         hr: Int.random(in: 60...110),
@@ -44,42 +44,41 @@ func generateMockPresageData() -> PresagePacket {
     )
 }
 
-
 // --- 3. Application Setup ---
-@main
-struct PresageBridgeApp {
-    static func main() async throws {
-        let app = HBApplication(
-            configuration: .init(address: .hostname("localhost", port: 8081))
-        )
-        
-        // Add WebSocket upgrade handler
-        app.ws.add(path: "/") { _, ws in
-            print("INFO: Web client connected.")
-            
-            // Schedule a repeating task to send data
-            let scheduled = ws.channel.eventLoop.scheduleRepeatedTask(
-                initialDelay: .seconds(1),
-                delay: .milliseconds(100) // ~10 FPS for smoother demo
-            ) { _ in
-                let packet = generateMockPresageData()
-                let encoder = JSONEncoder()
-                do {
-                    let data = try encoder.encode(packet)
-                    // Send JSON string to the client
-                    ws.write(.text(String(data: data, encoding: .utf8)!))
-                } catch {
-                    print("ERROR: Failed to encode JSON: \(error)")
-                }
+// Create the application
+let app = HBApplication(configuration: .init(address: .hostname("localhost", port: 8081)))
+
+// Add WebSocket upgrade
+app.ws.add(path: "/") { _, ws in
+    print("INFO: Web client connected.")
+    
+    let scheduled = ws.channel.eventLoop.scheduleRepeatedTask(
+        initialDelay: .seconds(1),
+        delay: .milliseconds(100)
+    ) { _ in
+        let packet = generateMockPresageData()
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(packet)
+            if let jsonString = String(data: data, encoding: .utf8) {
+                ws.write(.text(jsonString))
             }
-            
-            // When the client disconnects, cancel the sending task
-            ws.onClose { _ in
-                print("INFO: Web client disconnected.")
-                scheduled.cancel()
-            }
+        } catch {
+            print("ERROR: Failed to encode JSON: \(error)")
         }
-        
-        try await app.runService()
     }
+    
+    ws.onClose { _ in
+        print("INFO: Web client disconnected.")
+        scheduled.cancel()
+    }
+}
+
+// Start the server
+do {
+    try app.start()
+    app.wait()
+} catch {
+    print("ERROR: Failed to start server: \(error)")
+    app.stop()
 }
