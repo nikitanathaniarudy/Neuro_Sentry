@@ -322,7 +322,7 @@ def build_triage_prompt(stats: Dict[str, object], sample_packets: List[Dict[str,
     
     # 2. Generate "Technician Notes" for Gemini
     # We force the interpretation here so Gemini doesn't guess.
-    if mouth_val < 0.08:
+    if mouth_val < 0.02:
         tech_note = "Technician Note: Asymmetry is within normal physiological limits. PATIENT IS LIKELY HEALTHY."
     elif mouth_val < 0.15:
         tech_note = "Technician Note: Mild asymmetry detected. Monitor."
