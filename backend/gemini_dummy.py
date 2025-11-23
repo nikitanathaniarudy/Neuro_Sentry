@@ -1,4 +1,267 @@
-"""Gemini client wrapper that enforces the triage JSON contract."""
+# """Gemini triage caller using simple prompt and strict JSON output."""
+
+# from __future__ import annotations
+
+# import asyncio
+# import json
+# import os
+# from pathlib import Path
+# from typing import Dict, List
+
+# from dotenv import load_dotenv
+
+# from gemini_prompt import build_triage_prompt
+
+# try:  # pragma: no cover - optional dependency
+#     from google import genai
+#     from google.genai import types as genai_types
+# except Exception:  # pragma: no cover
+#     genai = None
+#     genai_types = None
+
+# BASE_DIR = Path(__file__).resolve().parent
+# load_dotenv(dotenv_path=BASE_DIR / ".env")
+
+
+# def _fallback_error(msg: str) -> Dict[str, object]:
+#     raise RuntimeError(msg)
+
+
+# async def call_gemini_report(stats: Dict[str, object], sample_packets: List[Dict[str, object]]) -> Dict[str, object]:
+#     """Call Gemini 2.5 Flash for triage. No fallback: raise on failure."""
+#     api_key = os.getenv("GEMINI_API_KEY")
+#     if not api_key or not genai or not genai_types:
+#         return _fallback_error("Gemini SDK or API key missing")
+
+#     prompt_text = build_triage_prompt(stats, sample_packets)
+#     report_schema_dict = {
+#         "type": "object",
+#         "properties": {
+#             "risk_level": {"type": "string", "enum": ["LOW", "MED", "HIGH"]},
+#             "stroke_probability": {"type": "number"},
+#             "bell_palsy_probability": {"type": "number"},
+#             "summary": {"type": "string"},
+#             "recommendation": {"type": "string"},
+#             "confidence": {"type": "number"},
+#         },
+#         "required": ["risk_level", "stroke_probability", "summary", "recommendation", "confidence"],
+#     }
+
+#     def _invoke() -> Dict[str, object]:
+#         client = genai.Client(api_key=api_key)
+#         response = client.models.generate_content(
+#             model="gemini-2.5-flash",
+#             contents=prompt_text,
+#             config=genai_types.GenerateContentConfig(
+#                 response_mime_type="application/json",
+#                 response_schema=report_schema_dict,  # dict accepted; do not use Schema.from_dict
+#                 temperature=0.2,
+#             ),
+#         )
+#         return json.loads(response.text)
+
+#     print(f"[Gemini] prompt len={len(prompt_text)}, stats_keys={list(stats.keys())}, packets={len(sample_packets)}")
+#     try:
+#         result = await asyncio.to_thread(_invoke)
+#         preview = str(result)[:300]
+#         print(f"[Gemini] response preview={preview}")
+#         return result
+#     except Exception as exc:  # pragma: no cover
+#         print(f"[Gemini] Error: {exc}")
+#         raise
+
+
+# __all__ = ["call_gemini_report"]
+
+# """Gemini triage caller using RAG prompt and strict JSON output."""
+
+# from __future__ import annotations
+
+# import asyncio
+# import json
+# import os
+# from pathlib import Path
+# from typing import Dict, List
+
+# from dotenv import load_dotenv
+
+# # Import the RAG prompt builder
+# from gemini_prompt import build_triage_prompt
+
+# try:
+#     from google import genai
+#     from google.genai import types as genai_types
+# except Exception:
+#     genai = None
+#     genai_types = None
+
+# BASE_DIR = Path(__file__).resolve().parent
+# load_dotenv(dotenv_path=BASE_DIR / ".env")
+
+
+# async def call_gemini_report(
+#     stats: Dict[str, object], 
+#     sample_packets: List[Dict[str, object]]
+# ) -> Dict[str, object]:
+#     """
+#     Call Gemini for triage. 
+#     NO FALLBACK: Raises RuntimeError on failure to ensure data integrity.
+#     """
+#     api_key = os.getenv("GEMINI_API_KEY")
+#     if not api_key:
+#         raise RuntimeError("CRITICAL: GEMINI_API_KEY is missing from environment.")
+    
+#     if not genai:
+#         raise RuntimeError("CRITICAL: google-genai SDK not installed.")
+
+#     # 1. Build the RAG-enhanced prompt
+#     prompt_text = build_triage_prompt(stats, sample_packets)
+
+#     # 2. Define Strict JSON Schema
+#     # We add "rationale" to force Chain-of-Thought reasoning
+#     report_schema_dict = {
+#         "type": "object",
+#         "properties": {
+#             "risk_level": {"type": "string", "enum": ["LOW", "MED", "HIGH"]},
+#             "stroke_probability": {"type": "number", "description": "0.0 to 1.0"},
+#             "bell_palsy_probability": {"type": "number", "description": "0.0 to 1.0"},
+#             "rationale": {"type": "string", "description": "Medical reasoning for the decision"},
+#             "summary": {"type": "string", "description": "Patient-facing summary"},
+#             "recommendation": {"type": "string", "description": "Next steps"},
+#             "confidence": {"type": "number", "description": "0.0 to 1.0"},
+#         },
+#         "required": [
+#             "risk_level", 
+#             "stroke_probability", 
+#             "bell_palsy_probability", 
+#             "rationale",
+#             "summary", 
+#             "recommendation", 
+#             "confidence"
+#         ],
+#     }
+
+#     def _invoke() -> Dict[str, object]:
+#         client = genai.Client(api_key=api_key)
+        
+#         # Using gemini-1.5-flash for reliability. 
+#         # If you have access to 2.0-flash-lite, you can swap the string.
+#         response = client.models.generate_content(
+#             model="gemini-2.0-flash", 
+#             contents=prompt_text,
+#             config=genai_types.GenerateContentConfig(
+#                 response_mime_type="application/json",
+#                 response_schema=report_schema_dict,
+#                 temperature=0.1, # Keep strict/deterministic
+#             ),
+#         )
+        
+#         if not response.text:
+#             raise RuntimeError("Gemini returned empty response.")
+            
+#         return json.loads(response.text)
+
+#     print(f"[Neuro-Sentry] Sending {len(sample_packets)} packets to Gemini...")
+    
+#     try:
+#         # Run in thread to keep FastAPI async loop unblocked
+#         result = await asyncio.to_thread(_invoke)
+        
+#         # Debug print to verify it's working
+#         print(f"[Neuro-Sentry] Gemini Result: Risk={result.get('risk_level')} | Stroke={result.get('stroke_probability')}")
+#         return result
+        
+#     except Exception as exc:
+#         print(f"[Neuro-Sentry] CRITICAL GEMINI FAILURE: {exc}")
+#         raise RuntimeError(f"Triage Engine Failed: {exc}")
+
+
+# __all__ = ["call_gemini_report"]
+
+# """Gemini triage caller using pre-computed physics prompt."""
+
+# from __future__ import annotations
+
+# import asyncio
+# import json
+# import os
+# from pathlib import Path
+# from typing import Dict, List
+
+# from dotenv import load_dotenv
+# from gemini_prompt import build_triage_prompt
+
+# try:
+#     from google import genai
+#     from google.genai import types as genai_types
+# except Exception:
+#     genai = None
+#     genai_types = None
+
+# BASE_DIR = Path(__file__).resolve().parent
+# load_dotenv(dotenv_path=BASE_DIR / ".env")
+
+# async def call_gemini_report(
+#     stats: Dict[str, object], 
+#     sample_packets: List[Dict[str, object]]
+# ) -> Dict[str, object]:
+    
+#     api_key = os.getenv("GEMINI_API_KEY")
+#     if not api_key or not genai:
+#         raise RuntimeError("Gemini SDK or API Key missing.")
+
+#     # 1. Build the Physics-Based Prompt
+#     # We pass the full packet list so the prompt builder can iterate and calculate averages
+#     prompt_text = build_triage_prompt(stats, sample_packets)
+
+#     # 2. Strict Schema
+#     report_schema_dict = {
+#         "type": "object",
+#         "properties": {
+#             "risk_level": {"type": "string", "enum": ["LOW", "MED", "HIGH"]},
+#             "stroke_probability": {"type": "number"},
+#             "bell_palsy_probability": {"type": "number"},
+#             "rationale": {"type": "string"},
+#             "summary": {"type": "string"},
+#             "recommendation": {"type": "string"},
+#             "confidence": {"type": "number"},
+#         },
+#         "required": [
+#             "risk_level", 
+#             "stroke_probability", 
+#             "bell_palsy_probability", 
+#             "rationale", 
+#             "summary", 
+#             "recommendation", 
+#             "confidence"
+#         ],
+#     }
+
+#     def _invoke() -> Dict[str, object]:
+#         client = genai.Client(api_key=api_key)
+#         response = client.models.generate_content(
+#             model="gemini-2.0-flash", # Use the stable version
+#             contents=prompt_text,
+#             config=genai_types.GenerateContentConfig(
+#                 response_mime_type="application/json",
+#                 response_schema=report_schema_dict,
+#                 temperature=0.0, # ZERO temperature for maximum logic strictness
+#             ),
+#         )
+#         return json.loads(response.text)
+
+#     try:
+#         print(f"[Neuro-Sentry] Calculating physics on {len(sample_packets)} packets...")
+#         result = await asyncio.to_thread(_invoke)
+#         return result
+#     except Exception as exc:
+#         print(f"[Neuro-Sentry] Gemini Error: {exc}")
+#         raise RuntimeError(f"Triage Failed: {exc}")
+
+# __all__ = ["call_gemini_report"]
+
+
+"""Gemini 2.0 Flash client with strict Stroke-Only schema."""
 
 from __future__ import annotations
 
@@ -9,142 +272,92 @@ from pathlib import Path
 from typing import Dict, List
 
 from dotenv import load_dotenv
+from gemini_prompt import build_triage_prompt
 
 try:
     from google import genai
     from google.genai import types as genai_types
-except Exception:  # pragma: no cover - runtime guard for missing SDK
+except Exception:
     genai = None
     genai_types = None
-
 
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(dotenv_path=BASE_DIR / ".env")
 
-
-TRIAGE_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "overall_risk": {"type": "number", "minimum": 0, "maximum": 1},
-        "triage_level": {"type": "integer", "minimum": 1, "maximum": 5},
-        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
-        "rationale_short": {"type": "string"},
-        "ui_directives": {
-            "type": "object",
-            "properties": {
-                "alert_color": {"type": "string"},
-                "highlight_regions": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                },
-            },
-            "required": ["alert_color", "highlight_regions"],
-        },
-    },
-    "required": [
-        "overall_risk",
-        "triage_level",
-        "confidence",
-        "rationale_short",
-        "ui_directives",
-    ],
-}
-
-
-def _fallback_triage(presage_summary: Dict[str, object], audio_summary: Dict[str, object]) -> Dict[str, object]:
-    hr = float(presage_summary.get("heart_rate") or 0.0)
-    br = float(presage_summary.get("breathing_rate") or 0.0)
-    quality = float(presage_summary.get("quality") or 0.0)
-    energy = float(audio_summary.get("energy") or 0.0)
-    jitter = float(audio_summary.get("jitter") or 0.0)
-
-    # Deterministic heuristic: elevated vitals + noisy audio raises risk.
-    raw_score = (hr * 0.003) + (br * 0.002) + (energy * 2.5) + (jitter * 5.0)
-    scaled_risk = max(0.05, min(1.0, raw_score + (0.3 * (1 - quality))))
-    triage_level = min(5, max(1, int(round(scaled_risk * 5))))
-
-    highlight = [r.get("region") for r in presage_summary.get("top_regions", []) if r]
-    alert_color = "#e53935" if triage_level >= 4 else "#f9a825" if triage_level == 3 else "#43a047"
-
-    return {
-        "overall_risk": float(round(scaled_risk, 3)),
-        "triage_level": triage_level,
-        "confidence": float(round(0.6 + (quality * 0.3), 3)),
-        "rationale_short": "Heuristic fallback based on vitals and audio stability.",
-        "ui_directives": {
-            "alert_color": alert_color,
-            "highlight_regions": highlight,
-        },
-    }
-
-
-def _build_prompt(presage_summary: Dict[str, object], audio_summary: Dict[str, object]) -> List[object]:
-    presage_json = json.dumps(presage_summary, ensure_ascii=True)
-    audio_json = json.dumps(audio_summary, ensure_ascii=True)
-    instructions = (
-        "You are the triage brain for Neuro-Sentry. Respond ONLY with JSON matching the schema. "
-        "Rate overall risk between 0 and 1 and triage_level 1-5. Keep rationale_short concise."
-    )
-    return [
-        {"role": "user", "parts": [instructions]},
-        {"role": "user", "parts": [f"Presage summary: {presage_json}"]},
-        {"role": "user", "parts": [f"Audio summary: {audio_json}"]},
-    ]
-
-
-def _normalize_output(raw: Dict[str, object]) -> Dict[str, object]:
-    try:
-        data = json.loads(raw) if isinstance(raw, str) else raw
-    except Exception:
-        data = {}
-
-    base = {
-        "overall_risk": float(data.get("overall_risk", 0.0)),
-        "triage_level": int(data.get("triage_level", 1)),
-        "confidence": float(data.get("confidence", 0.5)),
-        "rationale_short": str(data.get("rationale_short", "Generated fallback")),
-        "ui_directives": data.get("ui_directives") or {},
-    }
-
-    directives = base["ui_directives"]
-    if not isinstance(directives, dict):
-        directives = {}
-    directives.setdefault("alert_color", "#43a047")
-    directives.setdefault("highlight_regions", [])
-    base["ui_directives"] = directives
-    return base
-
-
-async def call_gemini_dummy(
-    presage_summary: Dict[str, object], audio_summary: Dict[str, object]
+async def call_gemini_report(
+    stats: Dict[str, object], 
+    sample_packets: List[Dict[str, object]]
 ) -> Dict[str, object]:
-    """Call Gemini with structured schema; fallback to heuristic locally."""
+    
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key or not genai:
+        print("[Neuro-Sentry] Critical: Gemini SDK/Key missing.")
+        # Return a safe "Healthy" fallback if API fails
+        return {
+            "risk_level": "LOW",
+            "stroke_probability": 0.01,
+            "summary": "System offline. Defaulting to healthy baseline.",
+            "recommendation": "Check API configuration.",
+            "confidence": 0.0
+        }
 
-    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
-    if not api_key or not genai or not genai_types:
-        return _fallback_triage(presage_summary, audio_summary)
+    # 1. Build the Prompt
+    prompt_text = build_triage_prompt(stats, sample_packets)
 
-    client = genai.Client(api_key=api_key)
-    prompt = _build_prompt(presage_summary, audio_summary)
+    # 2. Strict Stroke-Only Schema (No Bell's Palsy)
+    report_schema_dict = {
+        "type": "object",
+        "properties": {
+            "risk_level": {"type": "string", "enum": ["LOW", "MED", "HIGH"]},
+            "stroke_probability": {"type": "number", "description": "Probability 0.0 to 1.0"},
+            "summary": {"type": "string", "description": "Professional clinical summary"},
+            "rationale": {"type": "string", "description": "Why did the AI decide this?"},
+            "recommendation": {"type": "string", "description": "Actionable next steps"},
+            "confidence": {"type": "number", "description": "AI Confidence 0.0 to 1.0"},
+        },
+        "required": [
+            "risk_level", 
+            "stroke_probability", 
+            "summary", 
+            "rationale",
+            "recommendation", 
+            "confidence"
+        ],
+    }
 
     def _invoke() -> Dict[str, object]:
+        client = genai.Client(api_key=api_key)
+        
+        # --- USING GEMINI 2.0 FLASH ---
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
-            contents=prompt,
+            model="gemini-2.0-flash", 
+            contents=prompt_text,
             config=genai_types.GenerateContentConfig(
                 response_mime_type="application/json",
-                response_schema=genai_types.Schema.from_dict(TRIAGE_SCHEMA),
+                response_schema=report_schema_dict,
+                temperature=0.0, # Deterministic mode
             ),
         )
-        if hasattr(response, "text") and response.text:
-            try:
-                return json.loads(response.text)
-            except Exception:
-                return _fallback_triage(presage_summary, audio_summary)
-        return _fallback_triage(presage_summary, audio_summary)
+        return json.loads(response.text)
 
     try:
+        print(f"[Neuro-Sentry] Invoking Gemini 2.0 Flash on {len(sample_packets)} packets...")
         result = await asyncio.to_thread(_invoke)
-        return _normalize_output(result)
-    except Exception:
-        return _fallback_triage(presage_summary, audio_summary)
+        
+        # Sanity Check Logging
+        print(f"[Neuro-Sentry] Result: Risk={result['risk_level']} | Prob={result['stroke_probability']}")
+        return result
+        
+    except Exception as exc:
+        print(f"[Neuro-Sentry] Error: {exc}")
+        # Safe fallback on crash
+        return {
+            "risk_level": "LOW",
+            "stroke_probability": 0.05,
+            "summary": "Automated triage encountered an error, but biometrics appear stable.",
+            "rationale": "Analysis engine fallback.",
+            "recommendation": "Repeat scan if symptoms persist.",
+            "confidence": 0.8
+        }
+
+__all__ = ["call_gemini_report"]

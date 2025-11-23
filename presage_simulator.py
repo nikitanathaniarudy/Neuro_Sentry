@@ -5,7 +5,7 @@ import random
 from datetime import datetime, timezone
 
 async def send_presage_packets():
-    uri = "ws://localhost:8000/presage_stream"
+    uri = "ws://172.20.10.2:8000/presage_stream"
     try:
         async with websockets.connect(uri) as websocket:
             print(f"Connected to {uri}")

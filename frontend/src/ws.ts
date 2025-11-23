@@ -1,17 +1,25 @@
-export type TriageOutput = {
-  overall_risk: number;
-  triage_level: number;
-  confidence: number;
-  rationale_short: string;
-  ui_directives: { alert_color: string; highlight_regions: string[] };
+export type LiveVitals = {
+  heart_rate: number | null;
+  breathing_rate: number | null;
+  quality: number | null;
+  blood_pressure?: { systolic: number; diastolic: number } | null;
+  face_points?: number[][];
+  session_packet_count: number;
 };
 
-export type LiveStateMessage = {
-  presage_summary: Record<string, unknown>;
-  audio_summary: Record<string, unknown>;
-  triage_output: TriageOutput;
-  is_simulated: boolean; // Added field
+export type GeminiReport = {
+  risk_level: "LOW" | "MED" | "HIGH";
+  stroke_probability: number;
+  summary: string;
+  recommendation: string;
+  confidence: number;
+  bell_palsy_probability?: number;
 };
+
+export type LiveStateMessage =
+  | { type: "live"; data: LiveVitals }
+  | { type: "raw_dump"; packets: Record<string, unknown>[] }
+  | { type: "final"; gemini_report: GeminiReport };
 
 type Handlers = {
   onMessage: (payload: LiveStateMessage) => void;
@@ -24,15 +32,18 @@ export function connectLiveState({ onMessage, onStatusChange }: Handlers) {
 
   const connect = () => {
     onStatusChange?.("connecting");
-    socket = new WebSocket("ws://localhost:8000/live_state");
+    const url = (import.meta.env.VITE_BACKEND_WS as string) || "ws://172.20.10.2:8000/live_state";
+    socket = new WebSocket(url);
 
     socket.onopen = () => {
+      console.log("[live_state] ws open", url);
       onStatusChange?.("open");
     };
 
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data) as LiveStateMessage;
+        console.log("[live_state] message", (data as any).type);
         onMessage(data);
       } catch (err) {
         console.warn("Bad live_state message", err);
@@ -40,8 +51,9 @@ export function connectLiveState({ onMessage, onStatusChange }: Handlers) {
     };
 
     socket.onclose = () => {
+      console.log("[live_state] ws closed");
       onStatusChange?.("closed");
-      reconnectTimer = window.setTimeout(connect, 1000);
+      reconnectTimer = window.setTimeout(connect, 1200);
     };
 
     socket.onerror = () => {
