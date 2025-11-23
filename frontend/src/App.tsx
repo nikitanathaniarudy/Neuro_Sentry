@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from "react";
 import Dashboard from "./components/Dashboard";
-import { LiveStateMessage, connectLiveState } from "./ws";
+import { GeminiReport, LiveStateMessage, LiveVitals, connectLiveState } from "./ws";
 
 const App: React.FC = () => {
-  const [liveData, setLiveData] = useState<Record<string, any> | null>(null);
+  const [liveVitals, setLiveVitals] = useState<LiveVitals | null>(null);
   const [rawPackets, setRawPackets] = useState<Record<string, unknown>[]>([]);
-  const [finalReport, setFinalReport] = useState<Record<string, unknown> | null>(null);
+  const [geminiReport, setGeminiReport] = useState<GeminiReport | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<"connecting" | "open" | "closed">("connecting");
 
   useEffect(() => {
     const disconnect = connectLiveState({
-      onMessage: (payload) => {
+      onMessage: (payload: LiveStateMessage) => {
         switch (payload.type) {
           case "live":
-            setLiveData(payload.data || null);
+            setLiveVitals(payload.data);
+            if (payload.data.session_packet_count === 1) {
+              setRawPackets([]);
+              setGeminiReport(null);
+            }
             break;
           case "raw_dump":
             setRawPackets(payload.packets || []);
-            setFinalReport(null); // Clear previous final report
-            setLiveData(null); // Clear live data on new session
             break;
           case "final":
-            setFinalReport(payload.gemini_report || {});
+            setGeminiReport(payload.gemini_report || null);
             break;
           default:
             console.warn("Unknown message type", payload);
@@ -35,10 +37,10 @@ const App: React.FC = () => {
   return (
     <div className="app-shell">
       <Dashboard
-        liveData={liveData}
+        liveVitals={liveVitals}
         rawPackets={rawPackets}
+        geminiReport={geminiReport}
         connectionStatus={connectionStatus}
-        finalReport={finalReport}
       />
     </div>
   );

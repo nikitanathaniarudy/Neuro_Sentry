@@ -1,18 +1,17 @@
-"""FastAPI backend for Neuro-Sentry demo with session + final Gemini report."""
+"""FastAPI backend: receives Presage packets, buffers session, and returns Gemini triage."""
 
 from __future__ import annotations
 
 import asyncio
 import json
 import sys
-from collections import deque
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
-from typing import Deque, Dict, List, Any, Tuple
+from statistics import mean
+from typing import Dict, List, Any
 
-from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.websockets import WebSocketState
 
 BACKEND_DIR = Path(__file__).resolve().parent
 if str(BACKEND_DIR) not in sys.path:
@@ -21,7 +20,7 @@ if str(BACKEND_DIR) not in sys.path:
 from gemini_dummy import call_gemini_report
 from schemas import PresagePacket
 
-app = FastAPI(title="Neuro-Sentry Backend", version="0.2.0")
+app = FastAPI(title="Neuro-Sentry Backend", version="0.7.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -30,151 +29,160 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Shared State
+# --- Shared State ---
 state_lock = asyncio.Lock()
 live_clients: List[WebSocket] = []
-session_buffer: Deque[PresagePacket] = deque()
+session_buffer: List[PresagePacket] = []
 session_active: bool = False
-# State for final report sequence
-raw_dump_to_send: List[Dict] | None = None
-final_report_to_send: Dict | None = None
+last_raw_dump: List[Dict[str, Any]] | None = None
+last_final_report: Dict[str, Any] | None = None
 
-# --- Helper Functions ---
 
-def _now() -> datetime:
-    return datetime.now(timezone.utc)
+# --- Helpers ---
 
-def _compute_stats(packets: List[PresagePacket]) -> Dict[str, object]:
+def _compute_stats(packets: List[PresagePacket]) -> Dict[str, Any]:
+    """Basic stats: mean HR/BR/quality + simple facial asymmetry if points exist."""
     if not packets:
-        return {}
-    hr = [p.heart_rate for p in packets if p.heart_rate is not None]
-    br = [p.breathing_rate for p in packets if p.breathing_rate is not None]
-    quality = [p.quality for p in packets if p.quality is not None]
+        return {"count": 0, "heart_rate_mean": None, "breathing_rate_mean": None, "quality_mean": None, "duration_ms": 0}
+
+    hr_values = [p.heart_rate for p in packets if p.heart_rate is not None]
+    br_values = [p.breathing_rate for p in packets if p.breathing_rate is not None]
+    quality_values = [p.quality for p in packets if p.quality is not None]
+
+    NOSE_TIP, MOUTH_LEFT, MOUTH_RIGHT, BROW_LEFT, BROW_RIGHT = 1, 61, 291, 105, 334
+    mouth_asym, brow_asym = [], []
+    for p in packets:
+        pts = p.face_points
+        if len(pts) > max(BROW_RIGHT, MOUTH_RIGHT):
+            try:
+                nose_y = pts[NOSE_TIP][1]
+                mouth_asym.append(abs(abs(pts[MOUTH_LEFT][1] - nose_y) - abs(pts[MOUTH_RIGHT][1] - nose_y)) * 100)
+                brow_asym.append(abs(abs(pts[BROW_LEFT][1] - nose_y) - abs(pts[BROW_RIGHT][1] - nose_y)) * 100)
+            except Exception:
+                continue
+
+    def safe_mean(vals):
+        return mean(vals) if vals else None
+
     return {
         "count": len(packets),
-        "heart_rate_mean": sum(hr) / len(hr) if hr else 0.0,
-        "breathing_rate_mean": sum(br) / len(br) if br else 0.0,
-        "quality_mean": sum(quality) / len(quality) if quality else 0.0,
-        "duration_ms": (packets[-1].timestamp - packets[0].timestamp).total_seconds() * 1000,
+        "heart_rate_mean": safe_mean(hr_values),
+        "breathing_rate_mean": safe_mean(br_values),
+        "quality_mean": safe_mean(quality_values),
+        "mouth_asymmetry_mean": safe_mean(mouth_asym),
+        "brow_asymmetry_mean": safe_mean(brow_asym),
+        "duration_ms": (packets[-1].timestamp - packets[0].timestamp).total_seconds() * 1000 if packets else 0,
     }
 
-async def broadcast_to_live_clients(payload: Dict):
-    disconnected_clients = []
-    for client in live_clients:
+
+async def broadcast_to_live_clients(payload: Dict[str, Any]) -> None:
+    """Send JSON payload to all connected live_state clients."""
+    stale: List[WebSocket] = []
+    client_count = len(live_clients)
+    print(f"[broadcast] type={payload.get('type')} -> {client_count} clients")
+    for client in list(live_clients):
         try:
             await client.send_json(payload)
         except (WebSocketDisconnect, RuntimeError):
-            disconnected_clients.append(client)
-    for client in disconnected_clients:
-        live_clients.remove(client)
+            stale.append(client)
+
+    if stale:
+        async with state_lock:
+            for client in stale:
+                if client in live_clients:
+                    live_clients.remove(client)
+
 
 # --- WebSocket Endpoints ---
 
 @app.websocket("/presage_stream")
 async def presage_stream(websocket: WebSocket) -> None:
-    """Receive Presage packets and maintain a rolling in-memory buffer."""
+    """iOS bridge pushes Presage control + vitals packets here."""
     await websocket.accept()
-    global session_active, raw_dump_to_send, final_report_to_send
+    print("[presage_stream] iOS client connected.")
+
+    global session_active, session_buffer, last_raw_dump, last_final_report
 
     try:
         while True:
             message = await websocket.receive_text()
-            try:
-                raw = json.loads(message)
-            except json.JSONDecodeError:
-                continue
-
+            raw = json.loads(message)
             msg_type = raw.get("type")
-            
-            async with state_lock:
-                if msg_type == "session_start":
-                    print("[presage_stream] session_start received")
-                    session_buffer.clear()
+            print(f"[presage_stream] received msg_type={msg_type}")
+
+            if msg_type == "session_start":
+                async with state_lock:
+                    session_buffer = []
                     session_active = True
-                    raw_dump_to_send = None
-                    final_report_to_send = None
+                    last_raw_dump = None
+                    last_final_report = None
+                print("[presage_stream] session_start")
 
-                elif msg_type == "session_end":
-                    print("[presage_stream] session_end received")
-                    if session_active and session_buffer:
-                        # 1. Freeze buffer and prepare raw dump
-                        dump = [p.model_dump() for p in session_buffer]
-                        raw_dump_to_send = dump
-                        
-                        # 2. Compute stats and run Gemini triage
-                        stats = _compute_stats(list(session_buffer))
-                        gemini_report = await call_gemini_report(stats, dump)
-                        final_report_to_send = gemini_report
-                    
+            elif msg_type == "vitals":
+                async with state_lock:
+                    if not session_active:
+                        continue
+                try:
+                    packet = PresagePacket.model_validate(raw)
+                except Exception as exc:
+                    print(f"[presage_stream] Packet validation failed: {exc}; keys={list(raw.keys())}")
+                    continue
+
+                async with state_lock:
+                    session_buffer.append(packet)
+                    live_summary = {
+                        "heart_rate": packet.heart_rate,
+                        "breathing_rate": packet.breathing_rate,
+                        "quality": packet.quality,
+                        "blood_pressure": packet.blood_pressure,
+                        "face_points": packet.face_points,
+                        "session_packet_count": len(session_buffer),
+                    }
+                await broadcast_to_live_clients({"type": "live", "data": live_summary})
+
+            elif msg_type == "session_end":
+                async with state_lock:
+                    buffer_copy = list(session_buffer)
+                    session_buffer = []
                     session_active = False
-                    session_buffer.clear()
 
-                elif msg_type == "vitals" and session_active:
-                    try:
-                        packet = PresagePacket.model_validate(raw)
-                        session_buffer.append(packet)
-                        
-                        # Create and broadcast live summary
-                        live_summary = {
-                            "heart_rate": packet.heart_rate,
-                            "breathing_rate": packet.breathing_rate,
-                            "quality": packet.quality,
-                            "session_packet_count": len(session_buffer),
-                        }
-                        await broadcast_to_live_clients({"type": "live", "data": live_summary})
-                    except Exception as e:
-                        print(f"[presage_stream] Error validating vitals packet: {e}")
-                
+                stats = _compute_stats(buffer_copy)
+                dump_data = [p.model_dump(mode="json") for p in buffer_copy]
+                gemini_report = await call_gemini_report(stats, dump_data)
+
+                async with state_lock:
+                    last_raw_dump = dump_data
+                    last_final_report = gemini_report
+
+                await broadcast_to_live_clients({"type": "raw_dump", "packets": dump_data})
+                await broadcast_to_live_clients({"type": "final", "gemini_report": gemini_report})
+                print("[presage_stream] session_end -> final report broadcast")
+
     except WebSocketDisconnect:
-        print("[presage_stream] Client disconnected.")
-    except Exception as e:
-        print(f"[presage_stream] Error: {e}")
+        print("[presage_stream] iOS client disconnected.")
+    except Exception as exc:
+        print(f"[presage_stream] Error: {exc}")
+
 
 @app.websocket("/live_state")
 async def live_state(websocket: WebSocket) -> None:
-    """Stream the latest summaries and triage/final output to the browser."""
+    """Frontend clients subscribe here for live and final messages."""
     await websocket.accept()
-    live_clients.append(websocket)
-    
-    global raw_dump_to_send, final_report_to_send
+    async with state_lock:
+        live_clients.append(websocket)
+        print(f"[live_state] Web client connected. Total: {len(live_clients)}")
+        if last_raw_dump is not None:
+            await websocket.send_json({"type": "raw_dump", "packets": last_raw_dump})
+        if last_final_report is not None:
+            await websocket.send_json({"type": "final", "gemini_report": last_final_report})
 
     try:
-        # On connect, send any pending final reports
-        async with state_lock:
-            if raw_dump_to_send:
-                await websocket.send_json({"type": "raw_dump", "packets": raw_dump_to_send})
-            if final_report_to_send:
-                await websocket.send_json({"type": "final", "gemini_report": final_report_to_send})
-
         while True:
-            # This loop now primarily handles broadcasting initiated from /presage_stream
-            # and periodically sending new final reports to late-joining clients.
-            async with state_lock:
-                if raw_dump_to_send:
-                    await broadcast_to_live_clients({"type": "raw_dump", "packets": raw_dump_to_send})
-                    raw_dump_to_send = None # Clear after sending
-                if final_report_to_send:
-                    await broadcast_to_live_clients({"type": "final", "gemini_report": final_report_to_send})
-                    final_report_to_send = None # Clear after sending
-            
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(60)  # keep alive
     except WebSocketDisconnect:
-        print("[live_state] Client disconnected.")
+        print("[live_state] Web client disconnected.")
     finally:
-        if websocket in live_clients:
-            live_clients.remove(websocket)
-
-# --- HTTP Endpoints ---
-
-@app.get("/health")
-async def health() -> Dict[str, object]:
-    return {
-        "ok": True,
-        "live_clients": len(live_clients),
-        "session_active": session_active,
-        "session_buffer_size": len(session_buffer),
-    }
-
-@app.get("/")
-async def root_health() -> Dict[str, object]:
-    return await health()
+        async with state_lock:
+            if websocket in live_clients:
+                live_clients.remove(websocket)
+        print(f"[live_state] Cleaned up client. Total: {len(live_clients)}")

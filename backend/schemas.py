@@ -1,9 +1,9 @@
-"""Pydantic schemas for Presage session uploads and Gemini output."""
+"""Pydantic schemas for Presage packets used by the backend."""
 
 from datetime import datetime, timezone
 from typing import Annotated, Dict, List, Optional
 
-from pydantic import BaseModel, Field, confloat, conint
+from pydantic import BaseModel, Field
 
 
 class PresagePacket(BaseModel):
@@ -16,6 +16,7 @@ class PresagePacket(BaseModel):
     quality: Optional[float] = Field(
         default=None, description="Signal quality/confidence from the bridge"
     )
+    blood_pressure: Optional[Dict[str, float]] = None
     face_points: List[Annotated[List[float], Field(min_length=2, max_length=3)]] = Field(
         default_factory=list,
         description="List of facial landmark points as [x, y, (z)]",
@@ -25,21 +26,4 @@ class PresagePacket(BaseModel):
     )
 
 
-class SessionUpload(BaseModel):
-    """Full session upload with raw packets."""
-
-    type: str = "session_upload"
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    device: str = "iphone"
-    packets: List[PresagePacket]
-
-
-class GeminiReport(BaseModel):
-    risk_level: str
-    stroke_probability: confloat(ge=0, le=1)
-    summary: str
-    recommendation: str
-    confidence: confloat(ge=0, le=1)
-
-
-__all__ = ["PresagePacket", "SessionUpload", "GeminiReport"]
+__all__ = ["PresagePacket"]
