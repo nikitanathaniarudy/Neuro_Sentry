@@ -321,36 +321,76 @@ def compute_bio_features(packets: List[Dict[str, object]]) -> Dict[str, float]:
 
 def compute_speech_features(audio_path: str) -> Dict[str, float]:
     """
+    Uses Gemini 2.0 Flash to transcribe audio and detect slurring.
     Returns a slur_score between 0 (clear) and 1 (very slurred).
-    Uses offline STT (Vosk) to measure confidence vs expected phrase.
     """
-    # Example: fixed phrase for demo
-    expected_phrase = "The sky is blue today"
+    try:
+        from google import genai
+        from google.genai import types as genai_types
+        import os
+        from pathlib import Path
+        
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            print("[Audio] Warning: GEMINI_API_KEY not found. Audio analysis skipped.")
+            return {"slur_score": 0.0, "transcription": ""}
+        
+        # Upload audio file to Gemini Files API
+        client = genai.Client(api_key=api_key)
+        
+        # Upload the audio file with explicit MIME type
+        with open(audio_path, "rb") as f:
+            audio_file = client.files.upload(file=f, config={"mime_type": "audio/wav"})
+        
+        print(f"[Audio] Uploaded audio file: {audio_file.name}")
+        
+        # Use Gemini to transcribe and analyze speech clarity
+        prompt = """Transcribe this audio and analyze the speech for signs of slurring or speech difficulty.
 
-    # Run Vosk offline recognizer (Python version assumed installed)
-    from vosk import Model, KaldiRecognizer
-    import wave
+Provide a JSON response with:
+1. "transcription": The full text of what was said
+2. "clarity_score": A score from 0-100 (100 = perfectly clear, 0 = completely slurred/unintelligible)
+3. "notes": Brief assessment of speech quality
 
-    wf = wave.open(audio_path, "rb")
-    model = Model("vosk_model")  # path to offline model
-    rec = KaldiRecognizer(model, wf.getframerate())
-    
-    results = []
-    while True:
-        data = wf.readframes(4000)
-        if len(data) == 0:
-            break
-        if rec.AcceptWaveform(data):
-            results.append(json.loads(rec.Result()))
-    results.append(json.loads(rec.FinalResult()))
+Return ONLY valid JSON."""
 
-    # Compute average confidence
-    confidences = [r.get("confidence", 1.0) for r in results if "confidence" in r]
-    avg_confidence = sum(confidences)/len(confidences) if confidences else 1.0
-
-    # Slur score: low confidence → higher slur
-    slur_score = round(1.0 - avg_confidence, 2)
-    return {"slur_score": slur_score, "expected_phrase": expected_phrase}
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=[prompt, audio_file],
+            config=genai_types.GenerateContentConfig(
+                response_mime_type="application/json",
+                temperature=0.1,
+            ),
+        )
+        
+        result = json.loads(response.text)
+        transcription = result.get("transcription", "")
+        clarity_score = result.get("clarity_score", 100)
+        
+        # Convert clarity score (0-100) to slur score (0-1, where 1 = heavily slurred)
+        slur_score = round((100 - clarity_score) / 100, 2)
+        
+        print(f"[Audio] Transcription: {transcription}")
+        print(f"[Audio] Clarity: {clarity_score}% | Slur Score: {slur_score}")
+        
+        # Clean up uploaded file
+        try:
+            client.files.delete(name=audio_file.name)
+        except:
+            pass
+        
+        return {
+            "slur_score": slur_score,
+            "transcription": transcription,
+            "clarity_score": clarity_score
+        }
+        
+    except ImportError:
+        print("[Audio] Warning: 'google-genai' library not installed. Audio analysis skipped.")
+        return {"slur_score": 0.0, "transcription": ""}
+    except Exception as e:
+        print(f"[Audio] Error during transcription: {e}")
+        return {"slur_score": 0.0, "transcription": ""}
 
 def compute_combined_features(packets: List[Dict[str, object]], audio_path: str = None) -> Dict[str, float]:
     bio_features = compute_bio_features(packets)
@@ -363,11 +403,13 @@ def compute_combined_features(packets: List[Dict[str, object]], audio_path: str 
 
     return bio_features
 
-def build_triage_prompt(stats: Dict[str, object], sample_packets: List[Dict[str, object]]) -> str:
+def build_triage_prompt(stats: Dict[str, object], sample_packets: List[Dict[str, object]], audio_path: str = None) -> str:
     # 1. Run Math
-    features = compute_bio_features(sample_packets)
+    features = compute_combined_features(sample_packets, audio_path)
     mouth_val = features["mouth_asymmetry_index"]
     slur_val = features.get("slur_score", 0.0)
+    transcription = features.get("transcription", "")
+    clarity_score = features.get("clarity_score", 100)
     
     # 2. Generate "Technician Notes" for Gemini
     # We force the interpretation here so Gemini doesn't guess.
@@ -378,25 +420,41 @@ def build_triage_prompt(stats: Dict[str, object], sample_packets: List[Dict[str,
     else:
         tech_note = "Technician Note: Mild asymmetry or slight slurring. Monitor closely."
 
-    # 3. Construct the Prompt
+    # 3. Construct the Prompt - Include BOTH vitals AND audio data
     payload = {
         "physics_engine_output": features,
         "vitals_summary": stats,
-        "automated_assessment": tech_note
+        "automated_assessment": tech_note,
+        "audio_analysis": {
+            "transcription": transcription,
+            "clarity_score": clarity_score,
+            "slur_score": slur_val
+        } if audio_path else None
     }
 
     instructions = (
-        "You are Neuro-Sentry, an advanced AI Neurologist using the CPSS Protocol.\n"
-        f"{CPSS_PROTOCOL}\n\n"
-        "TASK:\n"
-        "1. Analyze the 'physics_engine_output' below.\n"
-        "2. Use both 'mouth_asymmetry_index' AND 'slur_score' to assess stroke risk.\n"
-        "3. If mouth_asymmetry_index < 0.08 AND slur_score < 0.2, declare Risk: LOW.\n"
-        "4. Ignore Bell's Palsy. Focus ONLY on Ischemic Stroke risk.\n"
-        "5. Be conservative. Do not scare healthy users.\n"
-        "6. Return strictly formatted JSON."
+        "You are Neuro-Sentry, an advanced AI Neurologist using the CPSS Protocol.\\n"
+        f"{CPSS_PROTOCOL}\\n\\n"
+        "TASK:\\n"
+        "1. Analyze the 'physics_engine_output' which contains facial asymmetry data from video analysis.\\n"
+        "2. Analyze the 'audio_analysis' which contains speech transcription and clarity metrics.\\n"
+        "3. Use BOTH 'mouth_asymmetry_index' (from video) AND 'slur_score' (from audio) to assess stroke risk.\\n"
+        "4. If mouth_asymmetry_index < 0.08 AND slur_score < 0.2, declare Risk: LOW.\\n"
+        "5. Consider the actual transcribed speech content for additional diagnostic context.\\n"
+        "6. Ignore Bell's Palsy. Focus ONLY on Ischemic Stroke risk assessment.\\n"
+        "7. Be conservative but thorough. Do not scare healthy users, but be detailed in your analysis.\\n\\n"
+        
+        "RESPONSE REQUIREMENTS:\\n"
+        "- 'summary': Write 3-4 comprehensive sentences describing what you observed and your overall assessment.\\n"
+        "- 'rationale': Provide 3-5 detailed sentences explaining your medical reasoning. Reference specific metrics and thresholds.\\n"
+        "- 'recommendation': Give 3-4 specific, actionable sentences with clear next steps appropriate to the risk level.\\n"
+        "- 'key_findings': List 3-5 specific clinical observations (e.g., 'Facial symmetry within normal limits', 'Speech clarity at 92%').\\n"
+        "- 'warning_signs': List any concerning symptoms detected, or empty array if none found.\\n"
+        "- 'speech_clarity_score': 0-100 score (100=perfectly clear, 0=completely slurred).\\n\\n"
+        
+        "Be thorough, professional, and specific. Reference actual measurements from the data.\\n"
     )
 
-    return instructions + "\n\nLIVE TELEMETRY:\n" + json.dumps(payload)
+    return instructions + "\n\nLIVE TELEMETRY:\n" + json.dumps(payload, indent=2)
 
 __all__ = ["build_triage_prompt"]

@@ -286,7 +286,8 @@ load_dotenv(dotenv_path=BASE_DIR / ".env")
 
 async def call_gemini_report(
     stats: Dict[str, object], 
-    sample_packets: List[Dict[str, object]]
+    sample_packets: List[Dict[str, object]],
+    audio_path: str = None
 ) -> Dict[str, object]:
     
     api_key = os.getenv("GEMINI_API_KEY")
@@ -302,18 +303,51 @@ async def call_gemini_report(
         }
 
     # 1. Build the Prompt
-    prompt_text = build_triage_prompt(stats, sample_packets)
+    prompt_text = build_triage_prompt(stats, sample_packets, audio_path)
 
-    # 2. Strict Stroke-Only Schema (No Bell's Palsy)
+    # 2. Enhanced Schema for Detailed Clinical Analysis
     report_schema_dict = {
         "type": "object",
         "properties": {
-            "risk_level": {"type": "string", "enum": ["LOW", "MED", "HIGH"]},
-            "stroke_probability": {"type": "number", "description": "Probability 0.0 to 1.0"},
-            "summary": {"type": "string", "description": "Professional clinical summary"},
-            "rationale": {"type": "string", "description": "Why did the AI decide this?"},
-            "recommendation": {"type": "string", "description": "Actionable next steps"},
-            "confidence": {"type": "number", "description": "AI Confidence 0.0 to 1.0"},
+            "risk_level": {
+                "type": "string", 
+                "enum": ["LOW", "MED", "HIGH"],
+                "description": "Overall stroke risk classification"
+            },
+            "stroke_probability": {
+                "type": "number", 
+                "description": "Probability 0.0 to 1.0 based on combined facial and speech analysis"
+            },
+            "summary": {
+                "type": "string", 
+                "description": "Comprehensive 3-4 sentence clinical summary explaining the patient's condition, what was observed in both facial asymmetry and speech patterns, and the overall assessment. Be specific about measurements and findings."
+            },
+            "rationale": {
+                "type": "string", 
+                "description": "Detailed 3-5 sentence medical reasoning explaining WHY this risk level was assigned. Reference specific metrics (mouth asymmetry index, slur score, vital signs), explain how they compare to clinical thresholds, and describe the diagnostic logic used. Include both positive and negative findings."
+            },
+            "recommendation": {
+                "type": "string", 
+                "description": "Detailed 3-4 sentence actionable recommendations. For LOW risk: reassurance and preventive measures. For MED risk: specific monitoring steps and when to seek care. For HIGH risk: urgent actions and emergency protocols. Be specific and practical."
+            },
+            "confidence": {
+                "type": "number", 
+                "description": "AI Confidence 0.0 to 1.0 in this assessment"
+            },
+            "speech_clarity_score": {
+                "type": "number", 
+                "description": "0-100 score based on audio analysis (100=perfectly clear, 0=completely slurred)"
+            },
+            "key_findings": {
+                "type": "array",
+                "description": "List of 3-5 specific clinical observations from the analysis",
+                "items": {"type": "string"}
+            },
+            "warning_signs": {
+                "type": "array",
+                "description": "List of any concerning symptoms detected, or empty array if none",
+                "items": {"type": "string"}
+            }
         },
         "required": [
             "risk_level", 
@@ -321,7 +355,10 @@ async def call_gemini_report(
             "summary", 
             "rationale",
             "recommendation", 
-            "confidence"
+            "confidence",
+            "speech_clarity_score",
+            "key_findings",
+            "warning_signs"
         ],
     }
 

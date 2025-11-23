@@ -76,8 +76,13 @@ This directory is intended for a **native C++ application** that integrates dire
 *   Process video frames using the Presage SDK to extract vital signs (heart rate, breathing rate, quality) and facial landmark points.
 *   Format this processed data into `PresagePacket`s (JSON format).
 *   Send these `PresagePacket`s via a WebSocket connection to the Python backend's `/presage_stream` endpoint (e.g., `ws://localhost:8000/presage_stream`).
+*   **Control sessions**: The iOS app sends `session_start` when starting a Presage measurement and `session_end` when stopping it.
 
 **Key Point:** The Presage SDK does not run in the browser. This native bridge is a mandatory component for obtaining live Presage data.
+
+**Audio Recording:** Audio is captured from the **browser (desktop) microphone**, not the iOS device. The browser automatically starts recording audio when it detects that the iOS app has started a session (by observing the packet stream), and stops when the session ends. The system assumes that the iPhone (running the Presage bridge) and the desktop (running the browser) are physically co-located so that the desktop microphone can capture the same audio environment. Apple's restrictions prevent direct microphone access from the iOS app, hence this design choice.
+
+**Session Control:** Sessions are **controlled exclusively by the iOS app**. The browser has no Start/End Session buttons - it simply listens for iOS session events and automatically records audio during active sessions.
 
 ## Development Conventions
 

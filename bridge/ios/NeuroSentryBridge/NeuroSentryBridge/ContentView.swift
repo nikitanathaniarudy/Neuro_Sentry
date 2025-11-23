@@ -3,7 +3,7 @@ import SmartSpectraSwiftSDK
 
 struct ContentView: View {
     // Paste your Presage API key here for the demo
-    private let apiKey: String = "Fl5OoJHmDO5pfK89lw7UT5wWP414U8HB4ZvzoFNF"
+    private let apiKey: String = "fKf1psSm2C3z8hdDpVEqU6FuuWrnZkL53JVqmPKl"
 
     @StateObject private var bridge: PresageBridgeClient
     @State private var isSessionActive = false

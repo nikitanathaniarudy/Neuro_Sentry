@@ -14,6 +14,7 @@ export type GeminiReport = {
   recommendation: string;
   confidence: number;
   bell_palsy_probability?: number;
+  speech_clarity_score?: number;
 };
 
 export type LiveStateMessage =
@@ -68,5 +69,40 @@ export function connectLiveState({ onMessage, onStatusChange }: Handlers) {
       clearTimeout(reconnectTimer);
     }
     socket?.close();
+  };
+}
+
+// Audio streaming WebSocket (separate connection)
+export function connectAudioStream(onAudioChunk: (data: ArrayBuffer) => void) {
+  let socket: WebSocket | null = null;
+
+  const connect = () => {
+    const url = (import.meta.env.VITE_BACKEND_WS as string)?.replace('/live_state', '/presage_stream') || "ws://172.20.10.2:8000/presage_stream";
+    socket = new WebSocket(url);
+
+    socket.onopen = () => {
+      console.log('[audio_stream] ws open', url);
+    };
+
+    socket.onerror = () => {
+      socket?.close();
+    };
+
+    socket.onclose = () => {
+      console.log('[audio_stream] ws closed');
+    };
+  };
+
+  connect();
+
+  return {
+    send: (data: ArrayBuffer) => {
+      if (socket?.readyState === WebSocket.OPEN) {
+        socket.send(data);
+      }
+    },
+    close: () => {
+      socket?.close();
+    }
   };
 }

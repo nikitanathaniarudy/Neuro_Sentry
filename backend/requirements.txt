@@ -7,3 +7,4 @@ scipy
 librosa
 python-dotenv
 google-genai
+vosk

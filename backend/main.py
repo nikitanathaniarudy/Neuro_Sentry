@@ -5,6 +5,9 @@ from __future__ import annotations
 import asyncio
 import json
 import sys
+import os
+import wave
+import tempfile
 from datetime import datetime
 from pathlib import Path
 from statistics import mean
@@ -33,6 +36,7 @@ app.add_middleware(
 state_lock = asyncio.Lock()
 live_clients: List[WebSocket] = []
 session_buffer: List[PresagePacket] = []
+audio_buffer: bytearray = bytearray()
 session_active: bool = False
 last_raw_dump: List[Dict[str, Any]] | None = None
 last_final_report: Dict[str, Any] | None = None
@@ -97,66 +101,105 @@ async def broadcast_to_live_clients(payload: Dict[str, Any]) -> None:
 
 @app.websocket("/presage_stream")
 async def presage_stream(websocket: WebSocket) -> None:
-    """iOS bridge pushes Presage control + vitals packets here."""
+    """iOS bridge pushes Presage control + vitals packets + audio bytes here."""
     await websocket.accept()
     print("[presage_stream] iOS client connected.")
 
-    global session_active, session_buffer, last_raw_dump, last_final_report
+    global session_active, session_buffer, audio_buffer, last_raw_dump, last_final_report
 
     try:
         while True:
-            message = await websocket.receive_text()
-            raw = json.loads(message)
-            msg_type = raw.get("type")
-            print(f"[presage_stream] received msg_type={msg_type}")
+            # Handle both text (JSON) and binary (Audio) messages
+            message = await websocket.receive()
+            
+            if message["type"] == "websocket.disconnect":
+                print("[presage_stream] Received disconnect message")
+                break
 
-            if msg_type == "session_start":
+            if "bytes" in message and message["bytes"]:
+                # Audio Chunk
+                # print(f"[presage_stream] Received audio chunk: {len(message['bytes'])} bytes") # Optional: verbose logging
                 async with state_lock:
-                    session_buffer = []
-                    session_active = True
-                    last_raw_dump = None
-                    last_final_report = None
-                print("[presage_stream] session_start")
+                    if session_active:
+                        audio_buffer.extend(message["bytes"])
+                continue
 
-            elif msg_type == "vitals":
-                async with state_lock:
-                    if not session_active:
+            if "text" in message and message["text"]:
+                raw = json.loads(message["text"])
+                msg_type = raw.get("type")
+                print(f"[presage_stream] received msg_type={msg_type}")
+
+                if msg_type == "session_start":
+                    async with state_lock:
+                        session_buffer = []
+                        audio_buffer = bytearray()
+                        session_active = True
+                        last_raw_dump = None
+                        last_final_report = None
+                    print("[presage_stream] session_start")
+
+                elif msg_type == "vitals":
+                    async with state_lock:
+                        if not session_active:
+                            continue
+                    try:
+                        packet = PresagePacket.model_validate(raw)
+                    except Exception as exc:
+                        print(f"[presage_stream] Packet validation failed: {exc}; keys={list(raw.keys())}")
                         continue
-                try:
-                    packet = PresagePacket.model_validate(raw)
-                except Exception as exc:
-                    print(f"[presage_stream] Packet validation failed: {exc}; keys={list(raw.keys())}")
-                    continue
 
-                async with state_lock:
-                    session_buffer.append(packet)
-                    live_summary = {
-                        "heart_rate": packet.heart_rate,
-                        "breathing_rate": packet.breathing_rate,
-                        "quality": packet.quality,
-                        "blood_pressure": packet.blood_pressure,
-                        "face_points": packet.face_points,
-                        "session_packet_count": len(session_buffer),
-                    }
-                await broadcast_to_live_clients({"type": "live", "data": live_summary})
+                    async with state_lock:
+                        session_buffer.append(packet)
+                        live_summary = {
+                            "heart_rate": packet.heart_rate,
+                            "breathing_rate": packet.breathing_rate,
+                            "quality": packet.quality,
+                            "blood_pressure": packet.blood_pressure,
+                            "face_points": packet.face_points,
+                            "session_packet_count": len(session_buffer),
+                        }
+                    await broadcast_to_live_clients({"type": "live", "data": live_summary})
 
-            elif msg_type == "session_end":
-                async with state_lock:
-                    buffer_copy = list(session_buffer)
-                    session_buffer = []
-                    session_active = False
+                elif msg_type == "session_end":
+                    async with state_lock:
+                        buffer_copy = list(session_buffer)
+                        audio_copy = bytes(audio_buffer)
+                        session_buffer = []
+                        audio_buffer = bytearray()
+                        session_active = False
 
-                stats = _compute_stats(buffer_copy)
-                dump_data = [p.model_dump(mode="json") for p in buffer_copy]
-                gemini_report = await call_gemini_report(stats, dump_data)
+                    stats = _compute_stats(buffer_copy)
+                    dump_data = [p.model_dump(mode="json") for p in buffer_copy]
+                    
+                    # Save audio to temp file
+                    temp_wav_path = None
+                    if audio_copy:
+                        try:
+                            with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+                                temp_wav_path = tmp.name
+                                with wave.open(tmp, "wb") as wf:
+                                    wf.setnchannels(1)
+                                    wf.setsampwidth(2) # 16-bit PCM
+                                    wf.setframerate(16000) # Assuming 16kHz from iOS
+                                    wf.writeframes(audio_copy)
+                            print(f"[Audio] Saved {len(audio_copy)} bytes to {temp_wav_path}")
+                        except Exception as e:
+                            print(f"[Audio] Error saving WAV: {e}")
 
-                async with state_lock:
-                    last_raw_dump = dump_data
-                    last_final_report = gemini_report
+                    # Call Gemini with Audio
+                    gemini_report = await call_gemini_report(stats, dump_data, audio_path=temp_wav_path)
+                    
+                    # Cleanup temp file
+                    if temp_wav_path and os.path.exists(temp_wav_path):
+                        os.remove(temp_wav_path)
 
-                await broadcast_to_live_clients({"type": "raw_dump", "packets": dump_data})
-                await broadcast_to_live_clients({"type": "final", "gemini_report": gemini_report})
-                print("[presage_stream] session_end -> final report broadcast")
+                    async with state_lock:
+                        last_raw_dump = dump_data
+                        last_final_report = gemini_report
+
+                    await broadcast_to_live_clients({"type": "raw_dump", "packets": dump_data})
+                    await broadcast_to_live_clients({"type": "final", "gemini_report": gemini_report})
+                    print("[presage_stream] session_end -> final report broadcast")
 
     except WebSocketDisconnect:
         print("[presage_stream] iOS client disconnected.")
