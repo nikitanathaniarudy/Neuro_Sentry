@@ -240,6 +240,9 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import json
+import tempfile
 from typing import Dict, List, Tuple
 
 # --- MEDIAPIPE INDICES ---
@@ -315,19 +318,65 @@ def compute_bio_features(packets: List[Dict[str, object]]) -> Dict[str, float]:
         "packets_analyzed": valid_packets
     }
 
+
+def compute_speech_features(audio_path: str) -> Dict[str, float]:
+    """
+    Returns a slur_score between 0 (clear) and 1 (very slurred).
+    Uses offline STT (Vosk) to measure confidence vs expected phrase.
+    """
+    # Example: fixed phrase for demo
+    expected_phrase = "The sky is blue today"
+
+    # Run Vosk offline recognizer (Python version assumed installed)
+    from vosk import Model, KaldiRecognizer
+    import wave
+
+    wf = wave.open(audio_path, "rb")
+    model = Model("vosk_model")  # path to offline model
+    rec = KaldiRecognizer(model, wf.getframerate())
+    
+    results = []
+    while True:
+        data = wf.readframes(4000)
+        if len(data) == 0:
+            break
+        if rec.AcceptWaveform(data):
+            results.append(json.loads(rec.Result()))
+    results.append(json.loads(rec.FinalResult()))
+
+    # Compute average confidence
+    confidences = [r.get("confidence", 1.0) for r in results if "confidence" in r]
+    avg_confidence = sum(confidences)/len(confidences) if confidences else 1.0
+
+    # Slur score: low confidence → higher slur
+    slur_score = round(1.0 - avg_confidence, 2)
+    return {"slur_score": slur_score, "expected_phrase": expected_phrase}
+
+def compute_combined_features(packets: List[Dict[str, object]], audio_path: str = None) -> Dict[str, float]:
+    bio_features = compute_bio_features(packets)
+    
+    if audio_path:
+        speech_features = compute_speech_features(audio_path)
+        bio_features.update(speech_features)
+    else:
+        bio_features["slur_score"] = 0.0  # default if no audio
+
+    return bio_features
+
 def build_triage_prompt(stats: Dict[str, object], sample_packets: List[Dict[str, object]]) -> str:
     # 1. Run Math
     features = compute_bio_features(sample_packets)
     mouth_val = features["mouth_asymmetry_index"]
+    slur_val = features.get("slur_score", 0.0)
     
     # 2. Generate "Technician Notes" for Gemini
     # We force the interpretation here so Gemini doesn't guess.
-    if mouth_val < 0.02:
-        tech_note = "Technician Note: Asymmetry is within normal physiological limits. PATIENT IS LIKELY HEALTHY."
-    elif mouth_val < 0.15:
-        tech_note = "Technician Note: Mild asymmetry detected. Monitor."
+    if mouth_val < 0.02 and slur_val < 0.2:
+        tech_note = "Technician Note: Asymmetry is within normal physiological limits and no slurring is detected. PATIENT IS LIKELY HEALTHY."
+    elif mouth_val >= 0.15 or slur_val >= 0.5:
+        tech_note = "Technician Note: SIGNIFICANT DROOP AND/OR SLURRED SPEECH DETECTED. High Stroke Risk."
     else:
-        tech_note = "Technician Note: SIGNIFICANT UNILATERAL DROOP DETECTED. High Stroke Risk."
+        tech_note = "Technician Note: Mild asymmetry or slight slurring. Monitor closely."
 
     # 3. Construct the Prompt
     payload = {
@@ -341,10 +390,11 @@ def build_triage_prompt(stats: Dict[str, object], sample_packets: List[Dict[str,
         f"{CPSS_PROTOCOL}\n\n"
         "TASK:\n"
         "1. Analyze the 'physics_engine_output' below.\n"
-        "2. If the 'mouth_asymmetry_index' is low (< 0.08), you MUST declare Risk: LOW.\n"
-        "3. Ignore Bell's Palsy. Focus ONLY on Ischemic Stroke risk.\n"
-        "4. Be conservative. Do not scare healthy users.\n"
-        "5. Return strictly formatted JSON."
+        "2. Use both 'mouth_asymmetry_index' AND 'slur_score' to assess stroke risk.\n"
+        "3. If mouth_asymmetry_index < 0.08 AND slur_score < 0.2, declare Risk: LOW.\n"
+        "4. Ignore Bell's Palsy. Focus ONLY on Ischemic Stroke risk.\n"
+        "5. Be conservative. Do not scare healthy users.\n"
+        "6. Return strictly formatted JSON."
     )
 
     return instructions + "\n\nLIVE TELEMETRY:\n" + json.dumps(payload)
